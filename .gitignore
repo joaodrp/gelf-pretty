@@ -13,3 +13,7 @@
 
 # Environment configurations
 .envrc
+
+# Others
+bin/*
+!bin/.gitkeep
