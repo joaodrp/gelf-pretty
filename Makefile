@@ -32,7 +32,7 @@ build: ## Compile code and build binary file
 	go build $(LDFLAGS) -o ./bin/$(PKG_NAME) ./...
 
 lint: ## Run linters
-	./bin/golangci-lint run --tests=false --enable-all ./...
+	./bin/golangci-lint run --tests=false --enable-all --disable=gochecknoglobals ./...
 
 test: ## Run test suite
 	go test -failfast -race -cover -covermode=atomic -coverprofile=cover.out -v ./...
@@ -43,7 +43,7 @@ cover: ## Open test coverage report
 run: ## Run binary
 	./bin/$(PKG_NAME)
 
-ci: setup build test lint ## Run all code checks and tests
+ci: build test lint ## Run all code checks and tests
 
 clean: ## Remove object and cache files
 	go clean
