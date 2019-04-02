@@ -43,7 +43,7 @@ cover: ## Open test coverage report
 run: ## Run binary
 	./bin/$(PKG_NAME)
 
-ci: setup build test lint ## Run all code checks and tests
+ci: build test lint ## Run all code checks and tests
 
 clean: ## Remove object and cache files
 	go clean
