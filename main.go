@@ -24,6 +24,11 @@ var (
 	BuildAuthor string
 )
 
+var (
+	// Map syslog levels to human readable names
+	levelToName map[int]string
+)
+
 // printVersion will display the compile/build-time versioning variables. This
 // is available through the `version` flag:
 //
@@ -46,6 +51,19 @@ func printVersion() {
 	fmt.Fprintln(w, "Build Author:", "\t", BuildAuthor)
 	fmt.Fprintln(w)
 	w.Flush()
+}
+
+func init() {
+	levelToName = map[int]string{
+		0: "EMERGENCY",
+		1: "ALERT",
+		2: "CRITICAL",
+		3: "ERROR",
+		4: "WARNING",
+		5: "NOTICE",
+		6: "INFO",
+		7: "DEBUG",
+	}
 }
 
 func main() {
