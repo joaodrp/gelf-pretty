@@ -2,6 +2,7 @@ package main
 
 import (
 	"bytes"
+	"io"
 	"strings"
 	"testing"
 )
@@ -64,5 +65,44 @@ func TestPrettyPrinter_run(t *testing.T) {
 			}
 
 		})
+	}
+}
+
+type readerErrMock struct{}
+
+func (readerErrMock) Read(p []byte) (int, error) {
+	return 0, io.ErrNoProgress
+}
+
+func TestPrettyPrinter_run_readError(t *testing.T) {
+	pp := newPrettyPrinter(readerErrMock{}, &bytes.Buffer{})
+	err := pp.run()
+
+	if err == nil {
+		t.Fatal("read should have failed")
+	}
+	if err != io.ErrNoProgress {
+		t.Errorf("expected %q got %v", io.ErrNoProgress, err)
+	}
+}
+
+type writerErrMock struct{}
+
+func (w writerErrMock) Write(p []byte) (int, error) {
+	return 0, io.ErrShortWrite
+}
+
+func TestPrettyPrinter_run_writeError(t *testing.T) {
+	stdin := new(bytes.Buffer)
+	stdin.WriteString("foo\n")
+
+	pp := newPrettyPrinter(stdin, &writerErrMock{})
+	err := pp.run()
+
+	if err == nil {
+		t.Fatal("write should have failed")
+	}
+	if err != io.ErrShortWrite {
+		t.Errorf("expected %q got %v", io.ErrShortWrite, err)
 	}
 }
