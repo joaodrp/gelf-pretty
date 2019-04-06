@@ -3,10 +3,8 @@ export GO111MODULE := on
 
 # Versioning variables
 VERSION := $(shell git describe --abbrev=0 --tags 2>/dev/null || true)
-BUILD_COMMIT := $(shell git rev-parse --short HEAD)
-BUILD_BRANCH := $(shell git rev-parse --abbrev-ref HEAD)
+BUILD_COMMIT := $(shell git rev-parse HEAD)
 BUILD_TIME := $(shell date -u +%FT%TZ)
-BUILD_AUTHOR := $(shell git config user.email)
 
 # Package name
 PKG_NAME := $(shell basename `pwd`)

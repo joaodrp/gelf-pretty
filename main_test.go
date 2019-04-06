@@ -7,13 +7,8 @@ import (
 	"testing"
 )
 
-func TestVersionInfo(t *testing.T) {
-	// FIXME: write proper tests
-	printVersion()
-}
-
-func TestLevelToNameMap(t *testing.T) {
-	want := map[int]string{
+func TestLevelToName(t *testing.T) {
+	wanted := map[int]string{
 		0: "EMERGENCY",
 		1: "ALERT",
 		2: "CRITICAL",
@@ -24,46 +19,63 @@ func TestLevelToNameMap(t *testing.T) {
 		7: "DEBUG",
 	}
 	for k, v := range levelToName {
-		if v != want[k] {
-			t.Errorf("invalid level name, expected %v got %s.", want[k], v)
+		if v != wanted[k] {
+			t.Errorf("invalid level name, wanted %v got %s", wanted[k], v)
 		}
 	}
 }
 
-var runTests = []struct {
-	name string
-	in   []string
-	out  []string
-}{
-	{"simple", []string{"foo", "bar"}, []string{"foo", "bar"}},
-	{"skipBlanks", []string{"foo", "", "bar"}, []string{"foo", "bar"}},
+func TestVersionInfo(t *testing.T) {
+	Version = "0.0.0"
+	BuildCommit = "640197df9b907efe9bfdf8ac2914b28a3ec9b8ef"
+	BuildTime = "2019-03-30T12:48:27Z"
+
+	got := versionInfo().String()
+	wanted := "\n" +
+		"          Version:  0.0.0\n" +
+		"Build Commit Hash:  640197df9b907efe9bfdf8ac2914b28a3ec9b8ef\n" +
+		"       Build Time:  2019-03-30T12:48:27Z\n" +
+		"\n"
+	if got != wanted {
+		t.Errorf("wanted %q got '%v'", wanted, got)
+	}
 }
 
 func TestPrettyPrinter_run(t *testing.T) {
-	for _, tt := range runTests {
-		t.Run(tt.name, func(t *testing.T) {
-			stdin := new(bytes.Buffer)
-			stdout := new(bytes.Buffer)
+	tests := []struct {
+		name string
+		in   []string
+		out  []string
+	}{
+		{"simple", []string{"foo", "bar"}, []string{"foo", "bar"}},
+		{"skipBlanks", []string{"foo", "", "bar"}, []string{"foo", "bar"}},
+	}
 
+	stdin := new(bytes.Buffer)
+	stdout := new(bytes.Buffer)
+
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
 			for _, i := range tt.in {
 				stdin.WriteString(i)
 				stdin.WriteString("\n")
 			}
 
 			pp := newPrettyPrinter(stdin, stdout)
-
 			if err := pp.run(); err != nil {
-				t.Fatalf("unexpected error: %v.", err)
+				t.Fatalf("unwanted error: %v", err)
 			}
 
 			out := strings.Split(stdout.String(), "\n")
 			out = out[:len(out)-1]
 			for i, o := range out {
 				if o != tt.out[i] {
-					t.Errorf("expected %s got %s.", out[i], o)
+					t.Errorf("wanted %s got %s", out[i], o)
 				}
 			}
 
+			stdin.Reset()
+			stdout.Reset()
 		})
 	}
 }
@@ -82,7 +94,7 @@ func TestPrettyPrinter_run_readError(t *testing.T) {
 		t.Fatal("read should have failed")
 	}
 	if err != io.ErrNoProgress {
-		t.Errorf("expected %q got %v", io.ErrNoProgress, err)
+		t.Errorf("wanted %q got %v", io.ErrNoProgress, err)
 	}
 }
 
@@ -103,6 +115,6 @@ func TestPrettyPrinter_run_writeError(t *testing.T) {
 		t.Fatal("write should have failed")
 	}
 	if err != io.ErrShortWrite {
-		t.Errorf("expected %q got %v", io.ErrShortWrite, err)
+		t.Errorf("wanted %q got %v", io.ErrShortWrite, err)
 	}
 }

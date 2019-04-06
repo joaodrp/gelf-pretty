@@ -2,6 +2,7 @@ package main
 
 import (
 	"bufio"
+	"bytes"
 	"flag"
 	"fmt"
 	"io"
@@ -9,29 +10,18 @@ import (
 	"text/tabwriter"
 )
 
-// Flags
-var versionFlag = flag.Bool("v", false, "Show version information")
-
-// Version variables
 var (
-	// Version is the SemVer application version (set to the latest git tag)
+	// Flags
+	versionFlag = flag.Bool("version", false, "Show version information")
+
+	// Version is the binary SemVer version (latest git tag)
 	Version string
-	// BuildCommit is the hash of the git commit on which the binary was built
+	// BuildCommit is the hash of the git commit used to build the binary
 	BuildCommit string
-	// BuildBranch is the branch from which the binary was built
-	BuildBranch string
-	// BuildTime is the build timestamp
+	// BuildTime is the binary build timestamp
 	BuildTime string
-	// BuildAuthor is the git email address of the user who built the binary
-	BuildAuthor string
-)
 
-var (
-	// Map syslog levels to human readable names
-	levelToName map[int]string
-)
-
-func init() {
+	// Map syslog levels to a human readable name
 	levelToName = map[int]string{
 		0: "EMERGENCY",
 		1: "ALERT",
@@ -42,7 +32,7 @@ func init() {
 		6: "INFO",
 		7: "DEBUG",
 	}
-}
+)
 
 type prettyPrinter struct {
 	reader *bufio.Scanner
@@ -77,47 +67,32 @@ func (h *prettyPrinter) processLine(l string) error {
 	return err
 }
 
-// printVersion will display the compile/build-time versioning variables. This
-// is available through the `version` flag:
+// versionInfo will display the compile/build-time version variables. This is
+// available through the `version` flag:
 //
-// $ gelf-pretty -v
+// $ gelf-pretty -version
 //
 //           Version:  0.1.0
 // Build Commit Hash:  640197df9b907efe9bfdf8ac2914b28a3ec9b8ef
-//      Build Branch:  master
 //        Build Time:  2019-03-30T12:48:27Z
-//      Build Author:  joaodrp@gmail.com
 //
-func printVersion() {
+func versionInfo() *bytes.Buffer {
+	b := new(bytes.Buffer)
 	w := new(tabwriter.Writer)
-	w.Init(os.Stdout, 0, 0, 0, ' ', tabwriter.AlignRight)
-	fmt.Fprintln(w)
-	fmt.Fprintln(w, "Version:", "\t", Version)
-	fmt.Fprintln(w, "Build Commit Hash:", "\t", BuildCommit)
-	fmt.Fprintln(w, "Build Branch:", "\t", BuildBranch)
-	fmt.Fprintln(w, "Build Time:", "\t", BuildTime)
-	fmt.Fprintln(w, "Build Author:", "\t", BuildAuthor)
-	fmt.Fprintln(w)
-	w.Flush()
-}
-
-func init() {
-	levelToName = map[int]string{
-		0: "EMERGENCY",
-		1: "ALERT",
-		2: "CRITICAL",
-		3: "ERROR",
-		4: "WARNING",
-		5: "NOTICE",
-		6: "INFO",
-		7: "DEBUG",
-	}
+	w.Init(b, 0, 0, 0, ' ', tabwriter.AlignRight)
+	_, _ = fmt.Fprintln(w)
+	_, _ = fmt.Fprintln(w, "Version:", "\t", Version)
+	_, _ = fmt.Fprintln(w, "Build Commit Hash:", "\t", BuildCommit)
+	_, _ = fmt.Fprintln(w, "Build Time:", "\t", BuildTime)
+	_, _ = fmt.Fprintln(w)
+	_ = w.Flush()
+	return b
 }
 
 func main() {
 	flag.Parse()
 	if *versionFlag {
-		printVersion()
+		fmt.Print(versionInfo())
 		os.Exit(0)
 	}
 
