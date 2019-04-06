@@ -1,8 +1,10 @@
 package main
 
 import (
+	"bufio"
 	"flag"
 	"fmt"
+	"io"
 	"os"
 	"text/tabwriter"
 )
@@ -10,7 +12,7 @@ import (
 // Flags
 var versionFlag = flag.Bool("v", false, "Show version information")
 
-// Versioning variables
+// Version variables
 var (
 	// Version is the SemVer application version (set to the latest git tag)
 	Version string
@@ -28,6 +30,52 @@ var (
 	// Map syslog levels to human readable names
 	levelToName map[int]string
 )
+
+func init() {
+	levelToName = map[int]string{
+		0: "EMERGENCY",
+		1: "ALERT",
+		2: "CRITICAL",
+		3: "ERROR",
+		4: "WARNING",
+		5: "NOTICE",
+		6: "INFO",
+		7: "DEBUG",
+	}
+}
+
+type prettyPrinter struct {
+	reader *bufio.Scanner
+	writer io.Writer
+}
+
+func newPrettyPrinter(r io.Reader, w io.Writer) *prettyPrinter {
+	return &prettyPrinter{
+		reader: bufio.NewScanner(r),
+		writer: w,
+	}
+}
+
+func (h *prettyPrinter) run() error {
+	for h.reader.Scan() {
+		t := h.reader.Text()
+		if len(t) == 0 {
+			continue
+		}
+		if err := h.processLine(t); err != nil {
+			return err
+		}
+	}
+	if err := h.reader.Err(); err != nil {
+		return err
+	}
+	return nil
+}
+
+func (h *prettyPrinter) processLine(l string) error {
+	_, err := fmt.Fprintln(h.writer, l)
+	return err
+}
 
 // printVersion will display the compile/build-time versioning variables. This
 // is available through the `version` flag:
@@ -68,9 +116,13 @@ func init() {
 
 func main() {
 	flag.Parse()
-
 	if *versionFlag {
 		printVersion()
 		os.Exit(0)
+	}
+
+	pp := newPrettyPrinter(os.Stdin, os.Stdout)
+	if err := pp.run(); err != nil {
+		panic(err)
 	}
 }
