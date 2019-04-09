@@ -102,7 +102,6 @@ func (afs additionalFields) String() string {
 	var sb strings.Builder
 	i := 0
 	for _, af := range afs {
-		fmt.Printf("<%v>\n", af.special())
 		if af.special() {
 			continue
 		}
@@ -221,7 +220,7 @@ func (g *gelf) logger() string {
 	return g.findAdditionalFieldValueByKey(specialFields["logger"])
 }
 
-func (g *gelf) pretty() string {
+func (g *gelf) String() string {
 	var sb strings.Builder
 	sb.WriteString(fmt.Sprintf("%s %s: ", g.timestamp, g.level))
 
@@ -269,7 +268,7 @@ func (h *prettyPrinter) processLine(b []byte) error {
 	if err := json.Unmarshal(b, g); err != nil {
 		return err
 	}
-	if _, err := fmt.Fprintln(h.writer, g.pretty()); err != nil {
+	if _, err := fmt.Fprintln(h.writer, g); err != nil {
 		return err
 	}
 	return nil
@@ -282,7 +281,8 @@ func (h *prettyPrinter) run() error {
 			continue
 		}
 		if err := h.processLine(b); err != nil {
-			return err
+			fmt.Fprintln(h.writer, string(b))
+			continue
 		}
 	}
 	if err := h.reader.Err(); err != nil {
