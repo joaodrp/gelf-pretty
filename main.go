@@ -281,7 +281,9 @@ func (h *prettyPrinter) run() error {
 			continue
 		}
 		if err := h.processLine(b); err != nil {
-			fmt.Fprintln(h.writer, string(b))
+			if _, err := fmt.Fprintln(h.writer, string(b)); err != nil {
+				return err
+			}
 			continue
 		}
 	}
