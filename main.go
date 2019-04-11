@@ -150,11 +150,11 @@ func (d dict) _findByKey(key string, required bool) (interface{}, error) {
 
 func (d dict) findByKeyAndCastToString(key string, required bool) (string, error) {
 	val, err := d._findByKey(key, required)
-	if err != nil {
+	if err != nil || val == nil {
 		return "", err
 	}
 	s, ok := val.(string)
-	if !ok && required {
+	if !ok {
 		return "", fmt.Errorf("%s is not a valid string", key)
 	}
 	delete(d, key)
@@ -163,7 +163,7 @@ func (d dict) findByKeyAndCastToString(key string, required bool) (string, error
 
 func (d dict) findByKeyAndCastToFloat64(key string, required bool) (float64, error) {
 	val, err := d._findByKey(key, required)
-	if err != nil {
+	if err != nil || val == nil {
 		return 0, err
 	}
 	n, ok := val.(float64)
@@ -176,9 +176,7 @@ func (d dict) findByKeyAndCastToFloat64(key string, required bool) (float64, err
 
 func (g *gelf) UnmarshalJSON(data []byte) error {
 	d := dict{}
-	if err := json.Unmarshal(data, &d); err != nil {
-		return err
-	}
+	_ = json.Unmarshal(data, &d) // never fails here
 
 	v, err := d.findByKeyAndCastToString("version", true)
 	if err != nil {

@@ -16,24 +16,6 @@ var (
 	update = flag.Bool("update", false, "update .golden files")
 )
 
-func TestLevelToName(t *testing.T) {
-	wanted := map[int]string{
-		0: "EMERGENCY",
-		1: "ALERT",
-		2: "CRITICAL",
-		3: "ERROR",
-		4: "WARNING",
-		5: "NOTICE",
-		6: "INFO",
-		7: "DEBUG",
-	}
-	for k, v := range levelToName {
-		if v != wanted[k] {
-			t.Errorf("invalid level name, wanted %v got %s", wanted[k], v)
-		}
-	}
-}
-
 func TestVersionInfo(t *testing.T) {
 	Version = "0.0.0"
 	BuildCommit = "640197df9b907efe9bfdf8ac2914b28a3ec9b8ef"
@@ -80,6 +62,20 @@ func TestPrettyPrinter_run_writeError(t *testing.T) {
 
 	pp := newPrettyPrinter(stdin, &writerErrMock{})
 	err := pp.run()
+
+	if err == nil {
+		t.Fatal("write should have failed")
+	}
+	if err != io.ErrShortWrite {
+		t.Errorf("wanted %q got %v", io.ErrShortWrite, err)
+	}
+}
+
+func TestPrettyPrinter_processLine_writeError(t *testing.T) {
+	pp := newPrettyPrinter(new(bytes.Buffer), &writerErrMock{})
+	input := "{\"version\":\"1.1\",\"host\":\"example.org\"," +
+		"\"short_message\":\"foo\",\"timestamp\":1385053862.3072,\"level\":6}\n"
+	err := pp.processLine([]byte(input))
 
 	if err == nil {
 		t.Fatal("write should have failed")
