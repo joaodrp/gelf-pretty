@@ -1,0 +1,13 @@
+wcrbgcvglpdwbakvjztynmeaotqcaekcytyidcmnkqanprjxgxhbikxylizw
+"version":"1.1","host":"example.org","short_message":"A short message","full_message":"A long message","timestamp":1555004824,"level":7}
+goroutine 1 [running]:
+main.Example(0x2080c3f50, 0x2, 0x4, 0x425c0, 0x5, 0xa)
+/path/to/main.go:5 +0x64
+main.main()
+/path/to/main.go:2 +0x85
+{"version":1.1,"host":"example.org"}
+{"versionss":"1.1","host":"example.org","short_message":"A short message","timestamp":1385053862.3072,"level":6}
+{"version":"1.1","host":"example.org","short_message":"A short message","timestampsss":1385053862.3072,"level":6}
+{"version":"1.1","host":"example.org","short_message":"A short message","timestamp":1385053862.3072,"level":"NOT A NUMBER"}
+{"version":"1.1","host":1,"short_message":"A short message","timestamp":1385053862.3072,"level":5}
+

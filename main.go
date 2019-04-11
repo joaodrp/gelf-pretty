@@ -9,6 +9,7 @@ import (
 	"io"
 	"math"
 	"os"
+	"sort"
 	"strings"
 	"text/tabwriter"
 	"time"
@@ -64,6 +65,13 @@ type unixTimestamp float64
 
 func (t unixTimestamp) String() string {
 	sec, dec := math.Modf(float64(t))
+
+	//nsec := int64(0)
+	//if dec > 0 {
+	//	fmt.Println("HERE")
+	//	nsec = int64(dec * (1e9))
+	//}
+
 	tm := time.Unix(int64(sec), int64(dec*(1e9)))
 	str := tm.Format(timeFormat)
 	return fmt.Sprintf("[%s]", str)
@@ -99,6 +107,12 @@ func (afs additionalFields) String() string {
 	if len(afs) == 0 {
 		return ""
 	}
+
+	// sort fields by key for predictability/reproducibility
+	sort.Slice(afs, func(i, j int) bool {
+		return afs[i].key < afs[j].key
+	})
+
 	var sb strings.Builder
 	i := 0
 	for _, af := range afs {
@@ -126,13 +140,21 @@ type gelf struct {
 
 type dict map[string]interface{}
 
-func (d dict) findByKeyAndCastToString(key string, required bool) (string, error) {
+func (d dict) _findByKey(key string, required bool) (interface{}, error) {
 	val, ok := d[key]
 	if !ok && required {
-		return "", fmt.Errorf("%s not found", key)
+		return nil, fmt.Errorf("%s not found", key)
+	}
+	return val, nil
+}
+
+func (d dict) findByKeyAndCastToString(key string, required bool) (string, error) {
+	val, err := d._findByKey(key, required)
+	if err != nil {
+		return "", err
 	}
 	s, ok := val.(string)
-	if !ok {
+	if !ok && required {
 		return "", fmt.Errorf("%s is not a valid string", key)
 	}
 	delete(d, key)
@@ -140,9 +162,9 @@ func (d dict) findByKeyAndCastToString(key string, required bool) (string, error
 }
 
 func (d dict) findByKeyAndCastToFloat64(key string, required bool) (float64, error) {
-	val, ok := d[key]
-	if !ok && required {
-		return 0, fmt.Errorf("%s not found", key)
+	val, err := d._findByKey(key, required)
+	if err != nil {
+		return 0, err
 	}
 	n, ok := val.(float64)
 	if !ok {
