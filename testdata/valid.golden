@@ -1,0 +1,14 @@
+[2013-11-21 17:11:02.307] INFO: example.org: A short message 
+[2019-04-11 17:47:04.000] DEBUG: example.org: A short message 
+	A long message
+[2014-02-07 07:59:12.704] ERROR: example.org: A short message 
+	Backtrace here
+	
+	more stuff
+[2019-04-10 18:06:01.675] ALERT: example.org: A short message some_env_var=bar some_info=foo user_id=9001
+	Backtrace here
+	
+	more stuff
+[2013-11-21 17:11:02.307] NOTICE: my-app/my-module on my-server: foo 
+[2019-04-11 17:47:04.000] ALERT: example.org: A short message 
+	A long message

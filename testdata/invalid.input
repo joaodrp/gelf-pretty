@@ -1,0 +1,10 @@
+wcrbgcvglpdwbakvjztynmeaotqcaekcytyidcmnkqanprjxgxhbikxylizw
+"version":"1.1","host":"example.org","short_message":"A short message","full_message":"A long message","timestamp":1555004824,"level":7}
+{"version":1.1,"host":"example.org"}
+
+{"versionss":"1.1","host":"example.org","short_message":"A short message","timestamp":1385053862.3072,"level":6}
+{"version":"1.1","host":"example.org","short_message":"A short message","timestampsss":1385053862.3072,"level":6}
+{"version":"1.1","host":"example.org","short_message":"A short message","timestamp":1385053862.3072,"level":"NOT A NUMBER"}
+{"version":"1.1","host":1,"short_message":"A short message","timestamp":1385053862.3072,"level":5}
+{"version":"1.1","host":"my-server","short_messagess":"invalid short message","timestamp":1385053862.3072,"level":5}
+{"version":"1.1","host":"example.org","short_message":"A short message","full_message":[],"timestamp":1555004824,"level":7}
