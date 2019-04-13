@@ -9,6 +9,7 @@ import (
 	"os"
 	"path/filepath"
 	"testing"
+	"time"
 )
 
 var (
@@ -39,7 +40,7 @@ func (readerErrMock) Read(p []byte) (int, error) {
 }
 
 func TestPrettyPrinter_run_readError(t *testing.T) {
-	pp := newPrettyPrinter(readerErrMock{}, &bytes.Buffer{})
+	pp := newPrettyPrinter(readerErrMock{}, &bytes.Buffer{}, nil)
 	err := pp.run()
 
 	if err == nil {
@@ -60,7 +61,7 @@ func TestPrettyPrinter_run_writeError(t *testing.T) {
 	stdin := new(bytes.Buffer)
 	stdin.WriteString("foo\n")
 
-	pp := newPrettyPrinter(stdin, &writerErrMock{})
+	pp := newPrettyPrinter(stdin, &writerErrMock{}, nil)
 	err := pp.run()
 
 	if err == nil {
@@ -72,7 +73,7 @@ func TestPrettyPrinter_run_writeError(t *testing.T) {
 }
 
 func TestPrettyPrinter_processLine_writeError(t *testing.T) {
-	pp := newPrettyPrinter(new(bytes.Buffer), &writerErrMock{})
+	pp := newPrettyPrinter(new(bytes.Buffer), &writerErrMock{}, nil)
 	input := "{\"version\":\"1.1\",\"host\":\"example.org\"," +
 		"\"short_message\":\"foo\",\"timestamp\":1385053862.3072,\"level\":6}\n"
 	err := pp.processLine([]byte(input))
@@ -155,7 +156,7 @@ func TestPrettyPrinter_run(t *testing.T) {
 			in := loadInputFixture(t, tt.in)
 			stdin.Write(in)
 
-			pp := newPrettyPrinter(stdin, stdout)
+			pp := newPrettyPrinter(stdin, stdout, time.UTC)
 			if err := pp.run(); err != nil {
 				t.Fatalf("unwanted error: %v", err)
 			}

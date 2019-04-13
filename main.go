@@ -61,13 +61,15 @@ func (fm fullMessage) String() string {
 	return sb.String()
 }
 
-type unixTimestamp float64
+type timestamp struct {
+	epoch    float64
+	location *time.Location
+}
 
-func (t unixTimestamp) String() string {
-	sec, dec := math.Modf(float64(t))
-	tm := time.Unix(int64(sec), int64(dec*(1e9)))
-	str := tm.Format(timeFormat)
-	return fmt.Sprintf("[%s]", str)
+func (t timestamp) String() string {
+	sec, dec := math.Modf(float64(t.epoch))
+	aux := time.Unix(int64(sec), int64(dec*(1e9))).In(t.location)
+	return fmt.Sprintf("[%s]", aux.Format(timeFormat))
 }
 
 type syslogLevel int
@@ -126,7 +128,7 @@ type gelf struct {
 	host             string
 	shortMessage     string
 	fullMessage      fullMessage
-	timestamp        unixTimestamp
+	timestamp        timestamp
 	level            syslogLevel
 	additionalFields additionalFields
 }
@@ -199,7 +201,7 @@ func (g *gelf) UnmarshalJSON(data []byte) error {
 	if err != nil {
 		return err
 	}
-	g.timestamp = unixTimestamp(t)
+	g.timestamp.epoch = t
 
 	l, err := d.findByKeyAndCastToFloat64("level", false)
 	if err != nil {
@@ -268,15 +270,21 @@ func (g *gelf) String() string {
 }
 
 type prettyPrinter struct {
-	reader *bufio.Scanner
-	writer io.Writer
+	reader       *bufio.Scanner
+	writer       io.Writer
+	timeLocation *time.Location
 }
 
-func newPrettyPrinter(r io.Reader, w io.Writer) *prettyPrinter {
-	return &prettyPrinter{
+func newPrettyPrinter(r io.Reader, w io.Writer, l *time.Location) *prettyPrinter {
+	pp := prettyPrinter{
 		reader: bufio.NewScanner(r),
 		writer: w,
 	}
+	if l == nil {
+		l = time.Local
+	}
+	pp.timeLocation = l
+	return &pp
 }
 
 func (h *prettyPrinter) processLine(b []byte) error {
@@ -284,6 +292,7 @@ func (h *prettyPrinter) processLine(b []byte) error {
 	if err := json.Unmarshal(b, g); err != nil {
 		return err
 	}
+	g.timestamp.location = h.timeLocation
 	if _, err := fmt.Fprintln(h.writer, g); err != nil {
 		return err
 	}
@@ -338,7 +347,7 @@ func main() {
 		os.Exit(0)
 	}
 
-	pp := newPrettyPrinter(os.Stdin, os.Stdout)
+	pp := newPrettyPrinter(os.Stdin, os.Stdout, nil)
 	if err := pp.run(); err != nil {
 		panic(err)
 	}
