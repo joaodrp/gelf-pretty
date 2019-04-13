@@ -3,3 +3,4 @@
 {"version":"1.1","host":"example.org","short_message":"A short message","full_message":"Backtrace here\n\nmore stuff","timestamp":1391759952.705,"level":3}
 {"version":"1.1","host":"example.org","short_message":"A short message","full_message":"Backtrace here\n\nmore stuff","timestamp":1554919561.6756,"level":1,"_user_id":9001,"_some_info":"foo","_some_env_var":"bar"}
 {"version":"1.1","host":"my-server","short_message":"foo","timestamp":1385053862.3072,"level":5,"_app":"my-app","_logger":"my-module"}
+{"version":"1.1","host":"example.org","short_message":"A short message","full_message":"A long message","timestamp":1555004824}

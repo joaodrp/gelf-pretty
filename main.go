@@ -65,13 +65,6 @@ type unixTimestamp float64
 
 func (t unixTimestamp) String() string {
 	sec, dec := math.Modf(float64(t))
-
-	//nsec := int64(0)
-	//if dec > 0 {
-	//	fmt.Println("HERE")
-	//	nsec = int64(dec * (1e9))
-	//}
-
 	tm := time.Unix(int64(sec), int64(dec*(1e9)))
 	str := tm.Format(timeFormat)
 	return fmt.Sprintf("[%s]", str)
@@ -176,7 +169,7 @@ func (d dict) findByKeyAndCastToFloat64(key string, required bool) (float64, err
 
 func (g *gelf) UnmarshalJSON(data []byte) error {
 	d := dict{}
-	_ = json.Unmarshal(data, &d) // never fails here
+	_ = json.Unmarshal(data, &d) // if it gets here it never fails
 
 	v, err := d.findByKeyAndCastToString("version", true)
 	if err != nil {
@@ -208,9 +201,12 @@ func (g *gelf) UnmarshalJSON(data []byte) error {
 	}
 	g.timestamp = unixTimestamp(t)
 
-	l, err := d.findByKeyAndCastToFloat64("level", true)
+	l, err := d.findByKeyAndCastToFloat64("level", false)
 	if err != nil {
 		return err
+	}
+	if l == 0 {
+		l = 1
 	}
 	g.level = syslogLevel(l)
 
