@@ -67,7 +67,7 @@ type timestamp struct {
 }
 
 func (t timestamp) String() string {
-	sec, dec := math.Modf(float64(t.epoch))
+	sec, dec := math.Modf(t.epoch)
 	aux := time.Unix(int64(sec), int64(dec*(1e9))).In(t.location)
 	return fmt.Sprintf("[%s]", aux.Format(timeFormat))
 }
