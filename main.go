@@ -13,18 +13,21 @@ import (
 	"strings"
 	"text/tabwriter"
 	"time"
+
+	"github.com/fatih/color"
 )
 
 var (
 	// Flags
 	versionFlag = flag.Bool("version", false, "Show version information")
+	noColorFlag = flag.Bool("no-color", false, "Disable color output")
 
 	// Version is the binary SemVer version (latest git tag)
-	Version string
+	version string
 	// BuildCommit is the hash of the git commit used to build the binary
-	BuildCommit string
+	buildCommit string
 	// BuildTime is the binary build timestamp
-	BuildTime string
+	buildTime string
 
 	// Map syslog levels to a human readable name
 	levelToName = map[int]string{
@@ -38,6 +41,18 @@ var (
 		7: "DEBUG",
 	}
 
+	// Map syslog levels to colors
+	levelToColor = map[int]color.Attribute{
+		0: color.FgHiRed,
+		1: color.FgHiRed,
+		2: color.FgHiRed,
+		3: color.FgRed,
+		4: color.FgYellow,
+		5: color.FgYellow,
+		6: color.FgGreen,
+		7: color.FgCyan,
+	}
+
 	// Additional fields that have a special behaviour
 	specialFields = map[string]string{
 		"app":    "_app",
@@ -46,6 +61,12 @@ var (
 )
 
 const timeFormat = "2006-01-02 15:04:05.000"
+
+type shortMessage string
+
+func (msg shortMessage) String() string {
+	return color.New(color.Bold).Sprint(string(msg))
+}
 
 type fullMessage string
 
@@ -75,7 +96,9 @@ func (t timestamp) String() string {
 type syslogLevel int
 
 func (l syslogLevel) String() string {
-	return levelToName[int(l)]
+	i := int(l)
+	c := color.New(levelToColor[i], color.Bold)
+	return c.Sprint(levelToName[i])
 }
 
 type additionalField struct {
@@ -84,7 +107,8 @@ type additionalField struct {
 }
 
 func (af additionalField) String() string {
-	return fmt.Sprintf("%s=%v", strings.TrimPrefix(af.key, "_"), af.value)
+	key := strings.TrimPrefix(af.key, "_")
+	return fmt.Sprintf("%s=%v", color.MagentaString(key), af.value)
 }
 
 func (af additionalField) special() bool {
@@ -126,7 +150,7 @@ func (afs additionalFields) String() string {
 type gelf struct {
 	version          string
 	host             string
-	shortMessage     string
+	shortMessage     shortMessage
 	fullMessage      fullMessage
 	timestamp        timestamp
 	level            syslogLevel
@@ -169,6 +193,7 @@ func (d dict) findByKeyAndCastToFloat64(key string, required bool) (float64, err
 	return n, nil
 }
 
+// UnmarshalJSON unmarshal a JSON string to a gelf struct
 func (g *gelf) UnmarshalJSON(data []byte) error {
 	d := dict{}
 	_ = json.Unmarshal(data, &d) // if it gets here it never fails
@@ -189,7 +214,7 @@ func (g *gelf) UnmarshalJSON(data []byte) error {
 	if err != nil {
 		return err
 	}
-	g.shortMessage = sm
+	g.shortMessage = shortMessage(sm)
 
 	fm, err := d.findByKeyAndCastToString("full_message", false)
 	if err != nil {
@@ -270,9 +295,9 @@ func (g *gelf) String() string {
 }
 
 type prettyPrinter struct {
-	reader       *bufio.Scanner
-	writer       io.Writer
-	timeLocation *time.Location
+	reader   *bufio.Scanner
+	writer   io.Writer
+	location *time.Location
 }
 
 func newPrettyPrinter(r io.Reader, w io.Writer, l *time.Location) *prettyPrinter {
@@ -283,7 +308,7 @@ func newPrettyPrinter(r io.Reader, w io.Writer, l *time.Location) *prettyPrinter
 	if l == nil {
 		l = time.Local
 	}
-	pp.timeLocation = l
+	pp.location = l
 	return &pp
 }
 
@@ -292,7 +317,7 @@ func (h *prettyPrinter) processLine(b []byte) error {
 	if err := json.Unmarshal(b, g); err != nil {
 		return err
 	}
-	g.timestamp.location = h.timeLocation
+	g.timestamp.location = h.location
 	if _, err := fmt.Fprintln(h.writer, g); err != nil {
 		return err
 	}
@@ -332,23 +357,34 @@ func versionInfo() *bytes.Buffer {
 	w := new(tabwriter.Writer)
 	w.Init(b, 0, 0, 0, ' ', tabwriter.AlignRight)
 	_, _ = fmt.Fprintln(w)
-	_, _ = fmt.Fprintln(w, "Version:", "\t", Version)
-	_, _ = fmt.Fprintln(w, "Build Commit Hash:", "\t", BuildCommit)
-	_, _ = fmt.Fprintln(w, "Build Time:", "\t", BuildTime)
+	_, _ = fmt.Fprintln(w, "Version:", "\t", version)
+	_, _ = fmt.Fprintln(w, "Build Commit Hash:", "\t", buildCommit)
+	_, _ = fmt.Fprintln(w, "Build Time:", "\t", buildTime)
 	_, _ = fmt.Fprintln(w)
 	_ = w.Flush()
 	return b
 }
 
-func main() {
+func run(r io.Reader, w io.Writer) error {
 	flag.Parse()
 	if *versionFlag {
-		fmt.Print(versionInfo())
-		os.Exit(0)
+		if _, err := fmt.Fprint(w, versionInfo()); err != nil {
+			return err
+		}
+		return nil
 	}
 
-	pp := newPrettyPrinter(os.Stdin, os.Stdout, nil)
+	color.NoColor = *noColorFlag
+
+	pp := newPrettyPrinter(r, w, nil)
 	if err := pp.run(); err != nil {
+		return err
+	}
+	return nil
+}
+
+func main() {
+	if err := run(os.Stdin, os.Stdout); err != nil {
 		panic(err)
 	}
 }
