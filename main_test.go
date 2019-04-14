@@ -34,6 +34,15 @@ func (w writerErrMock) Write(p []byte) (int, error) {
 	return 0, io.ErrShortWrite
 }
 
+func assertErrShortWrite(t *testing.T, err error) {
+	if err == nil {
+		t.Fatal("write should have failed")
+	}
+	if err != io.ErrShortWrite {
+		t.Errorf("wanted %q got %v", io.ErrShortWrite, err)
+	}
+}
+
 func _loadFixture(name string) ([]byte, error) {
 	path := filepath.Join("testdata", name)
 	return ioutil.ReadFile(path)
@@ -98,27 +107,7 @@ func TestPrettyPrinter_run_writeError(t *testing.T) {
 
 	pp := newPrettyPrinter(stdin, new(writerErrMock), nil)
 	err := pp.run()
-
-	if err == nil {
-		t.Fatal("write should have failed")
-	}
-	if err != io.ErrShortWrite {
-		t.Errorf("wanted %q got %v", io.ErrShortWrite, err)
-	}
-}
-
-func TestPrettyPrinter_processLine_writeError(t *testing.T) {
-	pp := newPrettyPrinter(new(bytes.Buffer), new(writerErrMock), nil)
-	input := "{\"version\":\"1.1\",\"host\":\"example.org\"," +
-		"\"short_message\":\"foo\",\"timestamp\":1385053862.3072,\"level\":6}\n"
-	err := pp.processLine([]byte(input))
-
-	if err == nil {
-		t.Fatal("write should have failed")
-	}
-	if err != io.ErrShortWrite {
-		t.Errorf("wanted %q got %v", io.ErrShortWrite, err)
-	}
+	assertErrShortWrite(t, err)
 }
 
 func TestPrettyPrinter_run(t *testing.T) {
@@ -207,13 +196,7 @@ func TestRun_version_WriteError(t *testing.T) {
 	defer func() { versionFlag = &no }()
 
 	err := run(new(bytes.Buffer), new(writerErrMock))
-
-	if err == nil {
-		t.Fatal("write should have failed")
-	}
-	if err != io.ErrShortWrite {
-		t.Errorf("wanted %q got %v", io.ErrShortWrite, err)
-	}
+	assertErrShortWrite(t, err)
 }
 
 func TestRun_writeError(t *testing.T) {
@@ -221,13 +204,7 @@ func TestRun_writeError(t *testing.T) {
 	stdin.WriteString("foo\n")
 
 	err := run(stdin, new(writerErrMock))
-
-	if err == nil {
-		t.Fatal("write should have failed")
-	}
-	if err != io.ErrShortWrite {
-		t.Errorf("wanted %q got %v", io.ErrShortWrite, err)
-	}
+	assertErrShortWrite(t, err)
 }
 
 func TestRun_noColor(t *testing.T) {
