@@ -365,17 +365,26 @@ func versionInfo() *bytes.Buffer {
 	return b
 }
 
-func main() {
+func run(r io.Reader, w io.Writer) error {
 	flag.Parse()
 	if *versionFlag {
-		fmt.Print(versionInfo())
-		os.Exit(0)
+		if _, err := fmt.Fprint(w, versionInfo()); err != nil {
+			return err
+		}
+		return nil
 	}
 
 	color.NoColor = *noColorFlag
 
-	pp := newPrettyPrinter(os.Stdin, os.Stdout, nil)
+	pp := newPrettyPrinter(r, w, nil)
 	if err := pp.run(); err != nil {
+		return err
+	}
+	return nil
+}
+
+func main() {
+	if err := run(os.Stdin, os.Stdout); err != nil {
 		panic(err)
 	}
 }
