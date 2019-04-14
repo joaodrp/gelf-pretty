@@ -11,11 +11,9 @@ PKG_NAME := $(shell basename `pwd`)
 
 # Setup ldflags for build interpolation
 LDFLAGS := -ldflags "-w -s \
--X main.Version=$(VERSION) \
--X main.BuildCommit=$(BUILD_COMMIT) \
--X main.BuildBranch=$(BUILD_BRANCH) \
--X main.BuildTime=$(BUILD_TIME) \
--X main.BuildAuthor=$(BUILD_AUTHOR)"
+-X main.version=$(VERSION) \
+-X main.buildCommit=$(BUILD_COMMIT) \
+-X main.buildTime=$(BUILD_TIME)"
 
 # Make options
 .SILENT: ;

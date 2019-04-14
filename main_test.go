@@ -3,13 +3,16 @@ package main
 import (
 	"bytes"
 	"flag"
-	"github.com/andreyvit/diff"
 	"io"
 	"io/ioutil"
 	"os"
 	"path/filepath"
 	"testing"
 	"time"
+
+	"github.com/fatih/color"
+
+	"github.com/andreyvit/diff"
 )
 
 var (
@@ -18,9 +21,9 @@ var (
 )
 
 func TestVersionInfo(t *testing.T) {
-	Version = "0.0.0"
-	BuildCommit = "640197df9b907efe9bfdf8ac2914b28a3ec9b8ef"
-	BuildTime = "2019-03-30T12:48:27Z"
+	version = "0.0.0"
+	buildCommit = "640197df9b907efe9bfdf8ac2914b28a3ec9b8ef"
+	buildTime = "2019-03-30T12:48:27Z"
 
 	got := versionInfo().String()
 	wanted := "\n" +
@@ -105,7 +108,9 @@ func createGoldenFile(t *testing.T, name string) {
 	if err != nil {
 		t.Fatalf("error creating golden file %s: %v", name, err)
 	}
-	_ = f.Close()
+	if err = f.Close(); err != nil {
+		t.Fatalf("error closing golden file %s: %v", name, err)
+	}
 }
 
 func updateGoldenFile(t *testing.T, name string, actual []byte) {
@@ -132,9 +137,10 @@ func loadGoldenFile(t *testing.T, name string, actual []byte) []byte {
 
 func TestPrettyPrinter_run(t *testing.T) {
 	tests := []struct {
-		name string
-		in   string
-		out  string
+		name  string
+		in    string
+		out   string
+		color bool
 	}{
 		{
 			name: "valid",
@@ -146,13 +152,22 @@ func TestPrettyPrinter_run(t *testing.T) {
 			in:   "invalid.input",
 			out:  "invalid.golden",
 		},
+		{
+			name:  "colored",
+			in:    "valid.input",
+			out:   "colored.golden",
+			color: true,
+		},
 	}
 
 	stdin := new(bytes.Buffer)
 	stdout := new(bytes.Buffer)
 
+	defer func() { color.NoColor = true }()
+
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
+			color.NoColor = !tt.color
 			in := loadInputFixture(t, tt.in)
 			stdin.Write(in)
 
@@ -168,9 +183,8 @@ func TestPrettyPrinter_run(t *testing.T) {
 				d := diff.LineDiff(string(expected), string(actual))
 				t.Errorf("output not as expected:\n%v", d)
 			}
-
-			stdin.Reset()
-			stdout.Reset()
 		})
+		stdin.Reset()
+		stdout.Reset()
 	}
 }
