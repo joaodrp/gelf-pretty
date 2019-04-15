@@ -89,27 +89,6 @@ func loadGoldenFile(t *testing.T, name string, actual []byte) []byte {
 	return g
 }
 
-func TestPrettyPrinter_run_readError(t *testing.T) {
-	pp := newPrettyPrinter(readerErrMock{}, &bytes.Buffer{}, nil)
-	err := pp.run()
-
-	if err == nil {
-		t.Fatal("read should have failed")
-	}
-	if err != io.ErrNoProgress {
-		t.Errorf("wanted %q got %v", io.ErrNoProgress, err)
-	}
-}
-
-func TestPrettyPrinter_run_writeError(t *testing.T) {
-	stdin := new(bytes.Buffer)
-	stdin.WriteString("foo\n")
-
-	pp := newPrettyPrinter(stdin, new(writerErrMock), nil)
-	err := pp.run()
-	assertErrShortWrite(t, err)
-}
-
 func TestPrettyPrinter_run(t *testing.T) {
 	tests := []struct {
 		name  string
@@ -162,6 +141,28 @@ func TestPrettyPrinter_run(t *testing.T) {
 		stdin.Reset()
 		stdout.Reset()
 	}
+}
+
+func TestPrettyPrinter_run_readError(t *testing.T) {
+	pp := newPrettyPrinter(readerErrMock{}, &bytes.Buffer{}, nil)
+	err := pp.run()
+
+	if err == nil {
+		t.Fatal("read should have failed")
+	}
+	if err != io.ErrNoProgress {
+		t.Errorf("wanted %q got %v", io.ErrNoProgress, err)
+	}
+}
+
+func TestPrettyPrinter_run_writeError(t *testing.T) {
+	stdin := new(bytes.Buffer)
+	msg := bytes.Split(loadInputFixture(t, "valid.input"), []byte("\n"))[0]
+	stdin.Write(msg)
+
+	pp := newPrettyPrinter(stdin, new(writerErrMock), nil)
+	err := pp.run()
+	assertErrShortWrite(t, err)
 }
 
 func TestRun_version(t *testing.T) {
