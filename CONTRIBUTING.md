@@ -28,11 +28,11 @@ The name of your branch should follow this syntax:
 
 - Use `fix` as prefix if your changes address a bug, or `feature` if you are adding a new feature;
 - Make sure to include the number of the issue that was previously raised to report the issue or propose the new feature;
-- Add a short but accurate description of your fix or feature. 
+- Add a short but accurate description of your fix or feature (hyphenated). 
 
 Examples:
 
-- `fix/23-colored-output-on-windows`
+- `fix/23-no-colored-output-on-windows`
 - `feature/42-new-special-app-field`
 
 ### Setup
