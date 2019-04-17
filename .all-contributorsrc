@@ -1,0 +1,29 @@
+{
+  "files": [
+    "README.md"
+  ],
+  "imageSize": 100,
+  "commit": false,
+  "contributors": [
+    {
+      "login": "joaodrp",
+      "name": "João Pereira",
+      "avatar_url": "https://avatars3.githubusercontent.com/u/484633?v=4",
+      "profile": "http://joaodrp.com",
+      "contributions": [
+        "code",
+        "doc",
+        "maintenance",
+        "projectManagement",
+        "bug",
+        "review",
+        "test"
+      ]
+    }
+  ],
+  "contributorsPerLine": 7,
+  "projectName": "gelf-pretty",
+  "projectOwner": "joaodrp",
+  "repoType": "github",
+  "repoHost": "https://github.com"
+}
