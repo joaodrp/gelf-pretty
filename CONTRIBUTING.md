@@ -51,7 +51,7 @@ Install the build and lint dependencies:
 $ make setup
 ```
 
-Run the test suite to make sure everything is fine:
+Run the test suite to make sure everything is properly setup:
 
 ``` sh
 $ make test
@@ -65,7 +65,7 @@ Make your changes and try to build from source as you go:
 $ make build
 ```
 
-When you are satisfied with the changes run the test suite and linters:
+Run the test suite and linters when you are satisfied with the changes:
 
 ``` sh
 $ make ci
@@ -85,4 +85,3 @@ master branch of this repository.
 ### Contributors
 
 Thank you to all the people who have already contributed to the project!
-

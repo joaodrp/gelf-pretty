@@ -11,8 +11,11 @@
 [![codecov](https://codecov.io/gh/joaodrp/gelf-pretty/branch/master/graph/badge.svg?token=0pMkTbPIOu)](https://codecov.io/gh/joaodrp/gelf-pretty)
 
 # gelf-pretty
+
 Binary to pretty-print GELF log messages
 
 This project adheres to the Contributor Covenant [code of conduct](CODE_OF_CONDUCT.md). By participating, you are expected to uphold this code.
 
 We appreciate your contribution. Please refer to our [contributing guidelines](CONTRIBUTING.md).
+
+## Contributors
