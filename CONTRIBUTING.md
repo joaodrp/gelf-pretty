@@ -6,7 +6,7 @@ First off, thank you for considering contributing to this project. By participat
 
 If you have noticed a bug or have a question please ensure it was not already reported/asked by someone else. You can do this by [searching all issues](https://github.com/joaodrp/gelf-pretty/issues). 
 
-If you are unable to find an issue addressing the same problem, please [open a new one][new issue]. Be sure to include a clear
+If you are unable to find an issue addressing the same problem, please [open a new one](https://github.com/joaodrp/gelf-pretty/issues/new). Be sure to include a clear
   description and an executable test case demonstrating the expected behavior that is not occurring.
 
 ## New Features
