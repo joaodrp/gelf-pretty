@@ -4,7 +4,7 @@ First off, thank you for considering contributing to this project. By participat
 
 ## Bugs and Questions
 
-If you have noticed a bug or have a question please ensure it was not already reported/asked by someone else. You can do this by [searching all issues][]. 
+If you have noticed a bug or have a question please ensure it was not already reported/asked by someone else. You can do this by [searching all issues](https://github.com/joaodrp/gelf-pretty/issues). 
 
 If you are unable to find an issue addressing the same problem, please [open a new one][new issue]. Be sure to include a clear
   description and an executable test case demonstrating the expected behavior that is not occurring.
@@ -18,7 +18,7 @@ If you want to implement a new feature please first discuss it by raising an iss
 
 ### Fork and Branch
 
-Please start by [forking this repository][] and creating a branch for your changes. 
+Please start by [forking this repository](https://help.github.com/en/articles/fork-a-repo) and creating a branch for your changes. 
 
 The name of your branch should follow this syntax:
 
@@ -77,7 +77,7 @@ Commit messages should be descriptive and well formatted. Have look at *[How to 
 
 ### Create Pull Request
 
-Push the changes to your fork and [create a Pull Request][] against the
+Push the changes to your fork and [create a Pull Request](https://help.github.com/en/articles/creating-a-pull-request) against the
 master branch of this repository.
 
 ## Credits
