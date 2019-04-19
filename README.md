@@ -8,7 +8,25 @@
 
 # GELF Pretty
 
-Binary to pretty-print [Graylog Extended Log Format (GELF)](http://docs.graylog.org/en/latest/pages/gelf.html) messages. Simply read lines from `stdin` and pretty-print them to `stdout`.
+Binary to pretty-print [Graylog Extended Log Format (GELF)](http://docs.graylog.org/en/latest/pages/gelf.html) messages.
+ 
+Simply reads GELF messages from `stdin`, like:
+ 
+```text
+{"version":"1.1","host":"my-server","short_message":"Starting server","timestamp":1555690413.839,"level":6,"_app":"my-app","_logger":"api","_port":"3000"}
+{"version":"1.1","host":"my-server","short_message":"Listening for requests","timestamp":1555690413.903,"level":6,"_app":"my-app","_logger":"api","_endpoint":"locahost:3000/v1"}
+{"version":"1.1","host":"my-server","short_message":"Request received","timestamp":155569049.540,"level":6,"_app":"my-app","_logger":"api","_method":"GET","_path":"/todos/1","_request_id":"0c4c165d"}
+{"version":"1.1","host":"my-server","short_message":"Response","full_message":"{\n\t\"user_id\": 1,\n\t\"id\": 1,\n\t\"title\": \"fix /users/:id/todos route\",\n\t\"completed\": false\n}","timestamp":155569049.584,"level":7,"_app":"my-app","_logger":"api","_request_id":"0c4c165d","_status":200}
+{"version":"1.1","host":"my-server","short_message":"Request received","timestamp":155569349.236,"level":6,"_app":"my-app","_logger":"api","_method":"GET","_path":"/users/1/todos","_request_id":"0c4c165d"}
+{"version":"1.1","host":"my-server","short_message":"Unexpected error","full_message":"runtime error: index out of range\ngoroutine 1 [running]:\nmain.main()\n\t/app/api/main.go: 9 +0x20","timestamp":155569349.563,"level":3,"_app":"my-app","_logger":"api","_request_id":"0c4c165d"}
+{"version":"1.1","host":"my-server","short_message":"Server shutting down","timestamp":155569349.571,"level":4,"_app":"my-app","_logger":"api"}
+```
+
+And pretty-prints them to `stdout`:
+
+![Image description](https://user-images.githubusercontent.com/484633/56434633-4eb7d900-62cd-11e9-8ff5-27d6f4931f7a.png)
+
+---
 
 This project adheres to the Contributor Covenant [code of conduct](CODE_OF_CONDUCT.md). By participating, you are expected to uphold this code. Please refer to our [contributing guide](CONTRIBUTING.md) for further information.
 
@@ -122,3 +140,5 @@ $ app | gelf-pretty --no-color
 `gelf-pretty` validates each input line. If a line (delimited by `\n`) is not a valid JSON string or is invalid according to the [GELF specification](http://docs.graylog.org/en/latest/pages/gelf.html#gelf-payload-specification), `gelf-pretty` will simply echo it back to the `stdout` without any modification (silently, with no error messages).
 
 If you believe that your log messages are valid, please [open a new issue](https://github.com/joaodrp/gelf-pretty/issues/new) and let us know.
+
+
