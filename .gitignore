@@ -17,3 +17,4 @@
 # Others
 bin/*
 !bin/.gitkeep
+.idea
