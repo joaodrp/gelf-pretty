@@ -12,8 +12,8 @@ PKG_NAME := $(shell basename `pwd`)
 # Setup ldflags for build interpolation
 LDFLAGS := -ldflags "-w -s \
 -X main.version=$(VERSION) \
--X main.buildCommit=$(BUILD_COMMIT) \
--X main.buildTime=$(BUILD_TIME)"
+-X main.commit=$(BUILD_COMMIT) \
+-X main.date=$(BUILD_TIME)"
 
 # Make options
 .SILENT: ;
@@ -21,6 +21,7 @@ LDFLAGS := -ldflags "-w -s \
 .PHONY: setup build lint test cover run ci clean help
 
 setup: ## Get lint and build depedencies
+	[ -d bin ] || mkdir bin
 	curl -sfL https://install.goreleaser.com/github.com/golangci/golangci-lint.sh | sh
 	go mod download
 
@@ -37,7 +38,7 @@ cover: ## Open test coverage report
 	go tool cover -html=cover.out
 
 run: ## Run binary
-	./bin/$(PKG_NAME)
+	go run .
 
 ci: build test lint ## Run all code checks and tests
 

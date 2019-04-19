@@ -173,8 +173,8 @@ func TestRun_version(t *testing.T) {
 	stdout := new(bytes.Buffer)
 
 	version = "X.Y.Z"
-	buildCommit = "640197df9b907efe9bfdf8ac2914b28a3ec9b8ef"
-	buildTime = "2006-01-02T15:04:05Z"
+	commit = "640197df9b907efe9bfdf8ac2914b28a3ec9b8ef"
+	date = "2006-01-02T15:04:05Z"
 
 	versionFlag = &yes
 	defer func() { versionFlag = &no }()

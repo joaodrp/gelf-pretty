@@ -22,12 +22,12 @@ var (
 	versionFlag = flag.Bool("version", false, "Show version information")
 	noColorFlag = flag.Bool("no-color", false, "Disable color output")
 
-	// Version is the binary SemVer version (latest git tag)
+	// version is the binary SemVer version (latest git tag)
 	version string
-	// BuildCommit is the hash of the git commit used to build the binary
-	buildCommit string
-	// BuildTime is the binary build timestamp
-	buildTime string
+	// commit is the hash of the git commit used to build the binary
+	commit string
+	// date is the binary build timestamp
+	date string
 
 	// Map syslog levels to a human readable name
 	levelToName = map[int]string{
@@ -358,8 +358,8 @@ func versionInfo() *bytes.Buffer {
 	w.Init(b, 0, 0, 0, ' ', tabwriter.AlignRight)
 	_, _ = fmt.Fprintln(w)
 	_, _ = fmt.Fprintln(w, "Version:", "\t", version)
-	_, _ = fmt.Fprintln(w, "Build Commit Hash:", "\t", buildCommit)
-	_, _ = fmt.Fprintln(w, "Build Time:", "\t", buildTime)
+	_, _ = fmt.Fprintln(w, "Build Commit Hash:", "\t", commit)
+	_, _ = fmt.Fprintln(w, "Build Time:", "\t", date)
 	_, _ = fmt.Fprintln(w)
 	_ = w.Flush()
 	return b

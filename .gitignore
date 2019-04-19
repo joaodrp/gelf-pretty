@@ -15,6 +15,5 @@
 .envrc
 
 # Others
-bin/*
-!bin/.gitkeep
-.idea
+bin
+dist
