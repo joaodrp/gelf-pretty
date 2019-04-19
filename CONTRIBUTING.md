@@ -79,9 +79,3 @@ Commit messages should be descriptive and well formatted. Have look at *[How to 
 
 Push the changes to your fork and [create a Pull Request](https://help.github.com/en/articles/creating-a-pull-request) against the
 master branch of this repository.
-
-## Credits
-
-### Contributors
-
-Thank you to all the people who have already contributed to the project!
