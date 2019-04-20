@@ -1,10 +1,11 @@
-[![Release](https://img.shields.io/github/release/joaodrp/gelf-pretty.svg?style=flat-square)](https://github.com/joaodrp/gelf-pretty/releases/latest)
-[![Travis](https://img.shields.io/travis/joaodrp/gelf-pretty.svg?style=flat-square)](https://travis-ci.org/joaodrp/gelf-pretty)
-[![Coverage Status](https://img.shields.io/codecov/c/github/joaodrp/gelf-pretty/master.svg?style=flat-square)](https://codecov.io/gh/joaodrp/gelf-pretty)
-[![Go Report Card](https://goreportcard.com/badge/github.com/joaodrp/gelf-pretty?style=flat-square)](https://goreportcard.com/report/github.com/joaodrp/gelf-pretty)
-[![Go Doc](https://img.shields.io/badge/godoc-reference-blue.svg?style=flat-square)](http://godoc.org/github.com/joaodrp/gelf-pretty)
-[![Software License](https://img.shields.io/badge/license-MIT-brightgreen.svg?style=flat-square)](LICENSE)
-[![SayThanks.io](https://img.shields.io/badge/Say%20Thanks-!-1EAEDB.svg?style=flat-square)](https://saythanks.io/to/joaodrp)
+[![Release](https://img.shields.io/github/release/joaodrp/gelf-pretty.svg)](https://github.com/joaodrp/gelf-pretty/releases/latest)
+[![Travis](https://img.shields.io/travis/joaodrp/gelf-pretty.svg)](https://travis-ci.org/joaodrp/gelf-pretty)
+[![Coverage Status](https://img.shields.io/codecov/c/github/joaodrp/gelf-pretty/master.svg)](https://codecov.io/gh/joaodrp/gelf-pretty)
+[![Go Report Card](https://goreportcard.com/badge/github.com/joaodrp/gelf-pretty)](https://goreportcard.com/report/github.com/joaodrp/gelf-pretty)
+[![Go Doc](https://img.shields.io/badge/godoc-reference-blue.svg)](http://godoc.org/github.com/joaodrp/gelf-pretty)
+[![Conventional Commits](https://img.shields.io/badge/Conventional%20Commits-1.0.0-yellow.svg)](https://conventionalcommits.org)
+[![Software License](https://img.shields.io/badge/license-MIT-brightgreen.svg)](LICENSE)
+[![SayThanks.io](https://img.shields.io/badge/Say%20Thanks-!-1EAEDB.svg)](https://saythanks.io/to/joaodrp)
 
 # GELF Pretty
 

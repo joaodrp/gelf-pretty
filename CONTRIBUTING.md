@@ -73,7 +73,7 @@ $ make ci
 
 #### Commit
 
-Commit messages should be descriptive and well formatted. Have look at *[How to Write a Git Commit Message](https://chris.beams.io/posts/git-commit/#seven-rules)*.
+Commit messages should adhere to the [Conventional Commits specification](https://conventionalcommits.org/).
 
 ### Create Pull Request
 
