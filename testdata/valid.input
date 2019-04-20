@@ -1,6 +1,10 @@
-{"version":"1.1","host":"example.org","short_message":"A short message","timestamp":1385053862.3072,"level":6}
-{"version":"1.1","host":"example.org","short_message":"A short message","full_message":"A long message","timestamp":1555004824,"level":7}
-{"version":"1.1","host":"example.org","short_message":"A short message","full_message":"Backtrace here\n\nmore stuff","timestamp":1391759952.705,"level":3}
-{"version":"1.1","host":"example.org","short_message":"A short message","full_message":"Backtrace here\n\nmore stuff","timestamp":1554919561.6756,"level":1,"_user_id":9001,"_some_info":"foo","_some_env_var":"bar"}
-{"version":"1.1","host":"my-server","short_message":"foo","timestamp":1385053862.3072,"level":5,"_app":"my-app","_logger":"my-module"}
-{"version":"1.1","host":"example.org","short_message":"A short message","full_message":"A long message","timestamp":1555004824}
+{"version":"1.1","host":"server","short_message":"Starting server","timestamp":1555690413.839}
+{"version":"1.1","host":"server","short_message":"Starting server","timestamp":1555690413.839,"level":6}
+{"version":"1.1","host":"server","short_message":"Starting server","timestamp":1555690413.839,"level":6, "_app":"app"}
+{"version":"1.1","host":"server","short_message":"Starting server","timestamp":1555690413.839,"level":6, "_logger":"module"}
+{"version":"1.1","host":"server","short_message":"Listening for requests","timestamp":1555690413.903,"level":6,"_endpoint":"locahost:3000/v1"}
+{"version":"1.1","host":"server","short_message":"Request received","timestamp":155569049.540,"level":6,"_app":"app","_logger":"module","_method":"GET","_path":"/todos/1","_request_id":"0c4c165d"}
+{"version":"1.1","host":"server","short_message":"Response","full_message":"{\n\t\"user_id\": 1,\n\t\"id\": 1,\n\t\"title\": \"fix /users/:id/todos route\",\n\t\"completed\": false\n}","timestamp":155569049.584,"level":7,"_app":"app","_logger":"module","_request_id":"0c4c165d","_status":200}
+{"version":"1.1","host":"server","short_message":"Request received","timestamp":155569349.236,"level":6,"_app":"app","_logger":"module","_method":"GET","_path":"/users/1/todos","_request_id":"0c4c165d"}
+{"version":"1.1","host":"server","short_message":"Unexpected error","full_message":"runtime error: index out of range\ngoroutine 1 [running]:\nmain.main()\n\t/app/module/main.go: 9 +0x20","timestamp":155569349.563,"level":3,"_app":"app","_logger":"module","_request_id":"0c4c165d"}
+{"version":"1.1","host":"server","short_message":"Server shutting down","timestamp":155569349.571,"level":4,"_app":"app","_logger":"module"}

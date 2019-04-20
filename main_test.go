@@ -89,7 +89,7 @@ func loadGoldenFile(t *testing.T, name string, actual []byte) []byte {
 	return g
 }
 
-func TestPrettyPrinter_run(t *testing.T) {
+func TestPrettyPrinter(t *testing.T) {
 	tests := []struct {
 		name  string
 		in    string
@@ -143,7 +143,7 @@ func TestPrettyPrinter_run(t *testing.T) {
 	}
 }
 
-func TestPrettyPrinter_run_readError(t *testing.T) {
+func TestPrettyPrinter_readError(t *testing.T) {
 	pp := newPrettyPrinter(readerErrMock{}, &bytes.Buffer{}, nil)
 	err := pp.run()
 
@@ -155,7 +155,7 @@ func TestPrettyPrinter_run_readError(t *testing.T) {
 	}
 }
 
-func TestPrettyPrinter_run_writeError(t *testing.T) {
+func TestPrettyPrinter_writeError(t *testing.T) {
 	stdin := new(bytes.Buffer)
 	msg := bytes.Split(loadInputFixture(t, "valid.input"), []byte("\n"))[0]
 	stdin.Write(msg)

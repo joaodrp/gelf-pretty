@@ -1,14 +1,20 @@
-[2013-11-21 17:11:02.307] INFO: example.org: A short message 
-[2019-04-11 17:47:04.000] DEBUG: example.org: A short message 
-	A long message
-[2014-02-07 07:59:12.704] ERROR: example.org: A short message 
-	Backtrace here
-	
-	more stuff
-[2019-04-10 18:06:01.675] ALERT: example.org: A short message some_env_var=bar some_info=foo user_id=9001
-	Backtrace here
-	
-	more stuff
-[2013-11-21 17:11:02.307] NOTICE: my-app/my-module on my-server: foo 
-[2019-04-11 17:47:04.000] ALERT: example.org: A short message 
-	A long message
+[2019-04-19 16:13:33.838] ALERT: server: Starting server 
+[2019-04-19 16:13:33.838] INFO: server: Starting server 
+[2019-04-19 16:13:33.838] INFO: app on server: Starting server 
+[2019-04-19 16:13:33.838] INFO: module on server: Starting server 
+[2019-04-19 16:13:33.903] INFO: server: Listening for requests endpoint=locahost:3000/v1
+[1974-12-06 13:37:29.539] INFO: app/module on server: Request received method=GET path=/todos/1 request_id=0c4c165d
+[1974-12-06 13:37:29.583] DEBUG: app/module on server: Response request_id=0c4c165d status=200
+	{
+		"user_id": 1,
+		"id": 1,
+		"title": "fix /users/:id/todos route",
+		"completed": false
+	}
+[1974-12-06 13:42:29.236] INFO: app/module on server: Request received method=GET path=/users/1/todos request_id=0c4c165d
+[1974-12-06 13:42:29.562] ERROR: app/module on server: Unexpected error request_id=0c4c165d
+	runtime error: index out of range
+	goroutine 1 [running]:
+	main.main()
+		/app/module/main.go: 9 +0x20
+[1974-12-06 13:42:29.571] WARNING: app/module on server: Server shutting down 

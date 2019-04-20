@@ -1,14 +1,20 @@
-[2013-11-21 17:11:02.307] [32;1mINFO[0m: example.org: [1mA short message[0m 
-[2019-04-11 17:47:04.000] [36;1mDEBUG[0m: example.org: [1mA short message[0m 
-	A long message
-[2014-02-07 07:59:12.704] [31;1mERROR[0m: example.org: [1mA short message[0m 
-	Backtrace here
-	
-	more stuff
-[2019-04-10 18:06:01.675] [91;1mALERT[0m: example.org: [1mA short message[0m [35msome_env_var[0m=bar [35msome_info[0m=foo [35muser_id[0m=9001
-	Backtrace here
-	
-	more stuff
-[2013-11-21 17:11:02.307] [33;1mNOTICE[0m: my-app/my-module on my-server: [1mfoo[0m 
-[2019-04-11 17:47:04.000] [91;1mALERT[0m: example.org: [1mA short message[0m 
-	A long message
+[2019-04-19 16:13:33.838] [91;1mALERT[0m: server: [1mStarting server[0m 
+[2019-04-19 16:13:33.838] [32;1mINFO[0m: server: [1mStarting server[0m 
+[2019-04-19 16:13:33.838] [32;1mINFO[0m: app on server: [1mStarting server[0m 
+[2019-04-19 16:13:33.838] [32;1mINFO[0m: module on server: [1mStarting server[0m 
+[2019-04-19 16:13:33.903] [32;1mINFO[0m: server: [1mListening for requests[0m [35mendpoint[0m=locahost:3000/v1
+[1974-12-06 13:37:29.539] [32;1mINFO[0m: app/module on server: [1mRequest received[0m [35mmethod[0m=GET [35mpath[0m=/todos/1 [35mrequest_id[0m=0c4c165d
+[1974-12-06 13:37:29.583] [36;1mDEBUG[0m: app/module on server: [1mResponse[0m [35mrequest_id[0m=0c4c165d [35mstatus[0m=200
+	{
+		"user_id": 1,
+		"id": 1,
+		"title": "fix /users/:id/todos route",
+		"completed": false
+	}
+[1974-12-06 13:42:29.236] [32;1mINFO[0m: app/module on server: [1mRequest received[0m [35mmethod[0m=GET [35mpath[0m=/users/1/todos [35mrequest_id[0m=0c4c165d
+[1974-12-06 13:42:29.562] [31;1mERROR[0m: app/module on server: [1mUnexpected error[0m [35mrequest_id[0m=0c4c165d
+	runtime error: index out of range
+	goroutine 1 [running]:
+	main.main()
+		/app/module/main.go: 9 +0x20
+[1974-12-06 13:42:29.571] [33;1mWARNING[0m: app/module on server: [1mServer shutting down[0m 
