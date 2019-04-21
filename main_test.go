@@ -48,7 +48,7 @@ func _loadFixture(name string) ([]byte, error) {
 	return ioutil.ReadFile(path)
 }
 
-func loadInputFixture(t *testing.T, name string) []byte {
+func loadInputFixture(t testing.TB, name string) []byte {
 	fx, err := _loadFixture(name)
 	if err != nil {
 		t.Fatalf("error reading input fixture %s: %v", name, err)
@@ -89,7 +89,7 @@ func loadGoldenFile(t *testing.T, name string, actual []byte) []byte {
 	return g
 }
 
-func TestPrettyPrinter(t *testing.T) {
+func TestPrettyPrinter_run(t *testing.T) {
 	tests := []struct {
 		name  string
 		in    string
@@ -140,6 +140,49 @@ func TestPrettyPrinter(t *testing.T) {
 		})
 		stdin.Reset()
 		stdout.Reset()
+	}
+}
+
+func BenchmarkPrettyPrinter_processLine(b *testing.B) {
+	tests := []struct {
+		name  string
+		in    string
+		color bool
+	}{
+		{
+			name: "uncolored",
+			in:   "benchmark.input",
+		},
+		{
+			name:  "colored",
+			in:    "benchmark.input",
+			color: true,
+		},
+	}
+
+	stdin := new(bytes.Buffer)
+	stdout := new(bytes.Buffer)
+
+	defer func() { color.NoColor = true }()
+
+	for _, tt := range tests {
+		b.Run(tt.name, func(b *testing.B) {
+			color.NoColor = !tt.color
+
+			in := loadInputFixture(b, tt.in)
+			pp := newPrettyPrinter(stdin, stdout, time.UTC)
+
+			for n := 0; n < b.N; n++ {
+				stdin.Write(in)
+
+				if err := pp.processLine(in); err != nil {
+					b.Fatalf("unwanted error: %v", err)
+				}
+
+				stdin.Reset()
+				stdout.Reset()
+			}
+		})
 	}
 }
 
