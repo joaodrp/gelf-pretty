@@ -4,13 +4,9 @@ addons:
     packages:
       - rpm
       - snapd
-      #- snapcraft
-  snaps:
-    - name: snapcraft
-      classic: true
+      - snapcraft
 go:
   - 1.12.x
-  # - tip
 env:
   - GO111MODULE=on
   - PATH=/snap/bin:$PATH
