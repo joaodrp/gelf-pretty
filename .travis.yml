@@ -1,11 +1,32 @@
 language: go
+addons:
+  apt:
+    packages:
+      - rpm
+      - snapd
+      #- snapcraft
+  snaps:
+    - name: snapcraft
+      classic: true
 go:
   - 1.12.x
-  - tip
+  # - tip
 env:
   - GO111MODULE=on
-install: make setup
+  - PATH=/snap/bin:$PATH
+install:
+  #- sudo snap install snapcraft --classic
+  - make setup
 script: make ci
-after_success: bash <(curl -s https://codecov.io/bash)
+after_success:
+  - bash <(curl -s https://codecov.io/bash)
+  - echo $SNAP_TOKEN | snapcraft login --with -
+deploy:
+  - provider: script
+    skip_cleanup: true
+    script: curl -sL https://git.io/goreleaser | bash
+    on:
+      tags: true
+      condition: $TRAVIS_OS_NAME = linux
 notifications:
   email: false
