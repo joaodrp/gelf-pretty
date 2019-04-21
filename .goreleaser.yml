@@ -53,8 +53,8 @@ nfpm:
 snapcraft:
   summary: Binary to pretty-print GELF messages
   description: Binary to pretty-print Graylog Extended Log Format (GELF) messages.
-  grade: devel # TODO: change to `stable`
-  confinement: devmode # TODO: change to `strict`
+  grade: stable # TODO: change to `stable`
+  confinement: strict
   publish: true
 
 brew:
@@ -69,6 +69,7 @@ brew:
 
 release:
   prerelease: auto
+  disable: true
 
 checksum:
   name_template: 'checksums.txt'
