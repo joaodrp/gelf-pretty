@@ -2,7 +2,6 @@ package main
 
 import (
 	"bufio"
-	"bytes"
 	"encoding/json"
 	"flag"
 	"fmt"
@@ -376,27 +375,22 @@ func (h *prettyPrinter) run() error {
 
 // versionInfo builds the compile/build-time version information. This is
 // available through the `version` flag.
-func versionInfo() *bytes.Buffer {
-	b := new(bytes.Buffer)
-	w := new(tabwriter.Writer)
-	w.Init(b, 0, 0, 0, ' ', tabwriter.AlignRight)
-	_, _ = fmt.Fprintln(w)
-	_, _ = fmt.Fprintln(w, "Version:", "\t", version)
-	_, _ = fmt.Fprintln(w, "Build Commit Hash:", "\t", commit)
-	_, _ = fmt.Fprintln(w, "Build Time:", "\t", date)
-	_, _ = fmt.Fprintln(w)
-	_ = w.Flush()
-	return b
+func versionInfo(w io.Writer) error {
+	tw := new(tabwriter.Writer)
+	tw.Init(w, 0, 0, 0, ' ', tabwriter.AlignRight)
+	fmt.Fprintln(tw)
+	fmt.Fprintln(tw, "Version:", "\t", version)
+	fmt.Fprintln(tw, "Build Commit Hash:", "\t", commit)
+	fmt.Fprintln(tw, "Build Time:", "\t", date)
+	fmt.Fprintln(tw)
+	return tw.Flush()
 }
 
 // run will parse flags, build and start the prettifiedPrinter.
 func run(r io.Reader, w io.Writer) error {
 	flag.Parse()
 	if *versionFlag {
-		if _, err := fmt.Fprint(w, versionInfo()); err != nil {
-			return err
-		}
-		return nil
+		return versionInfo(w)
 	}
 
 	color.NoColor = *noColorFlag
