@@ -9,8 +9,9 @@ go:
   - 1.12.x
   # - tip
 env:
-  - GO111MODULE=on
-  - PATH=/snap/bin:$PATH
+  global:
+    - GO111MODULE=on
+    - PATH=/snap/bin:$PATH
 install:
   - make setup
   - sudo snap install snapcraft --classic
