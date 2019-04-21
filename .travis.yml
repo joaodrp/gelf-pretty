@@ -1,18 +1,19 @@
+dist: xenial
 language: go
 addons:
   apt:
     packages:
       - rpm
       - snapd
-      - snapcraft
 go:
   - 1.12.x
+  # - tip
 env:
   - GO111MODULE=on
   - PATH=/snap/bin:$PATH
 install:
-  #- sudo snap install snapcraft --classic
   - make setup
+  - sudo snap install snapcraft --classic
 script: make ci
 after_success:
   - bash <(curl -s https://codecov.io/bash)
