@@ -55,7 +55,7 @@ snapcraft:
   description: Binary to pretty-print Graylog Extended Log Format (GELF) messages.
   grade: devel # TODO: change to `stable`
   confinement: devmode # TODO: change to `strict`
-  publish: false # TODO: remove
+  publish: true
 
 brew:
   github:
@@ -65,10 +65,9 @@ brew:
   homepage:  https://github.com/joaodrp/gelf-pretty
   description: Binary to pretty-print Graylog Extended Log Format (GELF) messages
   test: system "#{bin}/gelf-pretty -version"
-  skip_upload: true # TODO: test `auto` with pre-release, e.g. v0.1.0-rc1
+  skip_upload: auto
 
 release:
-  draft: true # TODO: remove
   prerelease: auto
 
 checksum:
