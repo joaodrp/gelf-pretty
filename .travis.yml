@@ -5,6 +5,9 @@ addons:
     packages:
       - rpm
       - snapd
+  snaps:
+    - name: snapcraft
+      classic: true
 go:
   - 1.12.x
   # - tip
@@ -14,7 +17,7 @@ env:
     - PATH=/snap/bin:$PATH
 install:
   - make setup
-  - sudo snap install snapcraft --classic
+  # - sudo snap install snapcraft --classic
 script: make ci
 after_success:
   - bash <(curl -s https://codecov.io/bash)
