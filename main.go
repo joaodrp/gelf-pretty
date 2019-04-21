@@ -18,18 +18,19 @@ import (
 )
 
 var (
-	// Flags
+	// versionFlag is a flag to display version information.
 	versionFlag = flag.Bool("version", false, "Show version information")
+	// noColorFlag is a flag to disable colored output.
 	noColorFlag = flag.Bool("no-color", false, "Disable color output")
 
-	// version is the binary SemVer version (latest git tag)
+	// version is the binary SemVer version (latest git tag).
 	version string
-	// commit is the hash of the git commit used to build the binary
+	// commit is the hash of the git commit used to build the binary.
 	commit string
-	// date is the binary build timestamp
+	// date is the binary build timestamp.
 	date string
 
-	// Map syslog levels to a human readable name
+	// levelToName maps syslog levels to a human readable name.
 	levelToName = map[int]string{
 		0: "EMERGENCY",
 		1: "ALERT",
@@ -40,8 +41,7 @@ var (
 		6: "INFO",
 		7: "DEBUG",
 	}
-
-	// Map syslog levels to colors
+	// levelToColor maps syslog levels to colors.
 	levelToColor = map[int]color.Attribute{
 		0: color.FgHiRed,
 		1: color.FgHiRed,
@@ -53,23 +53,28 @@ var (
 		7: color.FgCyan,
 	}
 
-	// Additional fields that have a special behaviour
-	specialFields = map[string]string{
-		"app":    "_app",
-		"logger": "_logger",
+	// reservedFields are GELF additional fields that have a special behaviour.
+	reservedFields = map[string]string{
+		"app":    "_app",    // identifies the application name
+		"logger": "_logger", // identifies the application module or logger instance
 	}
 )
 
+// timeFormat is the layout used to format the GELF `timestamp` field.
 const timeFormat = "2006-01-02 15:04:05.000"
 
+// shortMessage represents the GELF `short_message` field.
 type shortMessage string
 
+// String returns the prettified representation of the log short message.
 func (msg shortMessage) String() string {
 	return color.New(color.Bold).Sprint(string(msg))
 }
 
+// fullMessage represents the GELF `full_message` field.
 type fullMessage string
 
+// String returns the prettified representation of the log full message.
 func (fm fullMessage) String() string {
 	if len(fm) == 0 {
 		return ""
@@ -82,37 +87,44 @@ func (fm fullMessage) String() string {
 	return sb.String()
 }
 
+// timestamp represents the GELF `timestamp` field.
 type timestamp struct {
 	epoch    float64
 	location *time.Location
 }
 
+// String returns the prettified representation of the log timestamp.
 func (t timestamp) String() string {
 	sec, dec := math.Modf(t.epoch)
 	aux := time.Unix(int64(sec), int64(dec*(1e9))).In(t.location)
 	return fmt.Sprintf("[%s]", aux.Format(timeFormat))
 }
 
+// syslogLevel represents the GELF `level` field.
 type syslogLevel int
 
+// String returns the prettified representation of the log level.
 func (l syslogLevel) String() string {
 	i := int(l)
 	c := color.New(levelToColor[i], color.Bold)
 	return c.Sprint(levelToName[i])
 }
 
+// additionalField represents a GELF `_*` additional field.
 type additionalField struct {
 	key   string
 	value interface{}
 }
 
+// String returns the prettified representation of the additional field.
 func (af additionalField) String() string {
 	key := strings.TrimPrefix(af.key, "_")
 	return fmt.Sprintf("%s=%v", color.MagentaString(key), af.value)
 }
 
-func (af additionalField) special() bool {
-	for _, v := range specialFields {
+// reserved finds out if the additional field is reserved or not.
+func (af additionalField) reserved() bool {
+	for _, v := range reservedFields {
 		if af.key == v {
 			return true
 		}
@@ -120,8 +132,10 @@ func (af additionalField) special() bool {
 	return false
 }
 
+// additionalFields represents a list of GELF `_*` additional fields.
 type additionalFields []additionalField
 
+// String returns the prettified representation of a list of additional fields.
 func (afs additionalFields) String() string {
 	if len(afs) == 0 {
 		return ""
@@ -135,7 +149,7 @@ func (afs additionalFields) String() string {
 	var sb strings.Builder
 	i := 0
 	for _, af := range afs {
-		if af.special() {
+		if af.reserved() {
 			continue
 		}
 		if i > 0 {
@@ -147,6 +161,7 @@ func (afs additionalFields) String() string {
 	return sb.String()
 }
 
+// gelf represents a GELF log message.
 type gelf struct {
 	version          string
 	host             string
@@ -157,8 +172,11 @@ type gelf struct {
 	additionalFields additionalFields
 }
 
+// dict is an utility alias for `map[string]interface{}`.
 type dict map[string]interface{}
 
+// _findByKey searches a dictionary by key. If found, the value is returned. An
+// error is returned if the key was not found and it was said to be required.
 func (d dict) _findByKey(key string, required bool) (interface{}, error) {
 	val, ok := d[key]
 	if !ok && required {
@@ -167,6 +185,8 @@ func (d dict) _findByKey(key string, required bool) (interface{}, error) {
 	return val, nil
 }
 
+// findByKeyAndCastToString searches a dictionary by key and attempts to cast
+// its value to string.
 func (d dict) findByKeyAndCastToString(key string, required bool) (string, error) {
 	val, err := d._findByKey(key, required)
 	if err != nil || val == nil {
@@ -180,6 +200,8 @@ func (d dict) findByKeyAndCastToString(key string, required bool) (string, error
 	return s, nil
 }
 
+// findByKeyAndCastToFloat64 searches a dictionary by key and attempts to cast
+// its value to float64.
 func (d dict) findByKeyAndCastToFloat64(key string, required bool) (float64, error) {
 	val, err := d._findByKey(key, required)
 	if err != nil || val == nil {
@@ -246,6 +268,8 @@ func (g *gelf) UnmarshalJSON(data []byte) error {
 	return nil
 }
 
+// findAdditionalFieldValueByKey searches for an additional field by key and
+// returns its value as a string.
 func (g *gelf) findAdditionalFieldValueByKey(key string) string {
 	for _, af := range g.additionalFields {
 		if af.key == key {
@@ -255,14 +279,17 @@ func (g *gelf) findAdditionalFieldValueByKey(key string) string {
 	return ""
 }
 
+// app returns the reserved `_app` additional field value.
 func (g *gelf) app() string {
-	return g.findAdditionalFieldValueByKey(specialFields["app"])
+	return g.findAdditionalFieldValueByKey(reservedFields["app"])
 }
 
+// logger returns the reserved `_logger` additional field value.
 func (g *gelf) logger() string {
-	return g.findAdditionalFieldValueByKey(specialFields["logger"])
+	return g.findAdditionalFieldValueByKey(reservedFields["logger"])
 }
 
+// String returns the prettified representation of a GELF message.
 func (g *gelf) String() string {
 	var sb strings.Builder
 	sb.WriteString(fmt.Sprintf("%s %s: ", g.timestamp, g.level))
@@ -294,12 +321,14 @@ func (g *gelf) String() string {
 	return sb.String()
 }
 
+// prettyPrinter represents a pretty-printer for GELF messages.
 type prettyPrinter struct {
 	reader   *bufio.Scanner
 	writer   io.Writer
-	location *time.Location
+	location *time.Location // used to format/localize timestamps
 }
 
+// newPrettyPrinter returns a new prettyPrinter.
 func newPrettyPrinter(r io.Reader, w io.Writer, l *time.Location) *prettyPrinter {
 	pp := prettyPrinter{
 		reader: bufio.NewScanner(r),
@@ -312,6 +341,7 @@ func newPrettyPrinter(r io.Reader, w io.Writer, l *time.Location) *prettyPrinter
 	return &pp
 }
 
+// processLine pretty-prints a GELF message line.
 func (h *prettyPrinter) processLine(b []byte) error {
 	g := &gelf{}
 	if err := json.Unmarshal(b, g); err != nil {
@@ -324,6 +354,7 @@ func (h *prettyPrinter) processLine(b []byte) error {
 	return nil
 }
 
+// run starts the pretty-printer.
 func (h *prettyPrinter) run() error {
 	for h.reader.Scan() {
 		b := h.reader.Bytes()
@@ -343,15 +374,8 @@ func (h *prettyPrinter) run() error {
 	return nil
 }
 
-// versionInfo will display the compile/build-time version variables. This is
-// available through the `version` flag:
-//
-// $ gelf-pretty -version
-//
-//           Version:  0.1.0
-// Build Commit Hash:  640197df9b907efe9bfdf8ac2914b28a3ec9b8ef
-//        Build Time:  2019-03-30T12:48:27Z
-//
+// versionInfo builds the compile/build-time version information. This is
+// available through the `version` flag.
 func versionInfo() *bytes.Buffer {
 	b := new(bytes.Buffer)
 	w := new(tabwriter.Writer)
@@ -365,6 +389,7 @@ func versionInfo() *bytes.Buffer {
 	return b
 }
 
+// run will parse flags, build and start the prettifiedPrinter.
 func run(r io.Reader, w io.Writer) error {
 	flag.Parse()
 	if *versionFlag {
