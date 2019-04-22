@@ -5,7 +5,7 @@
         <img alt="Release" src="https://img.shields.io/github/release/joaodrp/gelf-pretty.svg">
     </a>
     <a href="https://travis-ci.com/joaodrp/gelf-pretty">
-        <img alt="Travis" src="	https://img.shields.io/travis/com/joaodrp/gelf-pretty.svg">
+        <img alt="Travis" src="https://img.shields.io/travis/com/joaodrp/gelf-pretty.svg">
     </a>
     <a href="https://codecov.io/gh/joaodrp/gelf-pretty">
         <img alt="Codecov"
