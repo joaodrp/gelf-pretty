@@ -49,15 +49,16 @@ snapcraft:
   confinement: strict
   publish: true
 brew:
+  folder: Formula
   github:
     owner: joaodrp
     name: homebrew-tap
   homepage:  https://github.com/joaodrp/gelf-pretty
   description: CLI to pretty-print Graylog Extended Log Format (GELF) log lines
   test: system "#{bin}/gelf-pretty --version"
+  skip_upload: auto
 release:
   prerelease: auto
-  draft: true
 changelog:
   sort: asc
   filters:
