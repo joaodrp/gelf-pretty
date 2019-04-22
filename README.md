@@ -2,34 +2,30 @@
 <h3 align="center">CLI to pretty-print GELF log lines</h3>
 <p align="center">
     <a href="https://github.com/joaodrp/gelf-pretty/releases/latest">
-        <img alt="Release" src="https://img.shields.io/github/release/joaodrp/gelf-pretty.svg?style=flat-square">
+        <img alt="Release" src="https://img.shields.io/github/release/joaodrp/gelf-pretty.svg">
     </a>
-    <a href="https://travis-ci.org/joaodrp/gelf-pretty">
-        <img alt="Travis" src="https://img.shields.io/travis/joaodrp/gelf-pretty.svg?style=flat-square">
+    <a href="https://travis-ci.com/joaodrp/gelf-pretty">
+        <img alt="Travis" src="	https://img.shields.io/travis/com/joaodrp/gelf-pretty.svg">
     </a>
     <a href="https://codecov.io/gh/joaodrp/gelf-pretty">
         <img alt="Codecov"
-            src="https://img.shields.io/codecov/c/github/joaodrp/gelf-pretty/master.svg?style=flat-square">
+            src="https://img.shields.io/codecov/c/github/joaodrp/gelf-pretty/master.svg">
     </a>
     <a href="https://goreportcard.com/report/github.com/joaodrp/gelf-pretty">
-        <img alt="Go Report" src="https://goreportcard.com/badge/github.com/joaodrp/gelf-pretty?style=flat-square">
+        <img alt="Go Report" src="https://goreportcard.com/badge/github.com/joaodrp/gelf-pretty">
     </a>
-    <a href="http://godoc.org/github.com/joaodrp/gelf-pretty">
-        <img alt="Go Doc" src="https://img.shields.io/badge/godoc-reference-blue.svg?style=flat-square">
-    </a>
-    <br />
     <a href="https://semver.org/">
-        <img alt="SemVer" src="https://img.shields.io/badge/semver-2.0.0-blue.svg?style=flat-square">
+        <img alt="SemVer" src="https://img.shields.io/badge/semver-2.0.0-blue.svg">
     </a>
     <a href="https://conventionalcommits.org">
         <img alt="Conventional Commits"
-            src="https://img.shields.io/badge/conventional%20commits-1.0.0-yellow.svg?style=flat-square">
+            src="https://img.shields.io/badge/conventional%20commits-1.0.0-yellow.svg">
     </a>
     <a href="LICENSE">
-        <img alt="Software License" src="https://img.shields.io/badge/license-MIT-brightgreen.svg?style=flat-square">
+        <img alt="Software License" src="https://img.shields.io/badge/license-MIT-brightgreen.svg">
     </a>
     <a href="https://saythanks.io/to/joaodrp">
-        <img alt="SayThanks.io" src="https://img.shields.io/badge/say%20thanks-%E2%98%BC-1EAEDB.svg?style=flat-square">
+        <img alt="SayThanks.io" src="https://img.shields.io/badge/say%20thanks-%E2%98%BC-1EAEDB.svg">
     </a>
 </p>
 
