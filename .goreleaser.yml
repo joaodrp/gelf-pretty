@@ -1,13 +1,8 @@
-# https://goreleaser.com/customization/
-project_name: gelf-pretty
-
 env:
   - GO111MODULE=on
-
 before:
   hooks:
     - go mod download
-
 builds:
   - env:
       - CGO_ENABLED=0
@@ -23,7 +18,6 @@ builds:
     goarm:
       - 6
       - 7
-
 archives:
   -
     replacements:
@@ -35,12 +29,11 @@ archives:
     files:
       - LICENSE
       - README.md
-
 nfpm:
   name_template: '{{ .ProjectName }}_{{ .Version }}_{{ .Arch }}{{ if .Arm }}v{{ .Arm }}{{ end }}'
   homepage:  https://github.com/joaodrp/gelf-pretty
-  description: Binary to pretty-print Graylog Extended Log Format (GELF) messages
-  maintainer: João Pereira # TODO: add email address
+  description: CLI to pretty-print Graylog Extended Log Format (GELF) log lines.
+  maintainer: João Pereira
   license: MIT
   formats:
     - deb
@@ -49,31 +42,25 @@ nfpm:
     - git
   recommends:
     - rpm
-
 snapcraft:
-  summary: Binary to pretty-print GELF messages
-  description: Binary to pretty-print Graylog Extended Log Format (GELF) messages.
-  grade: stable # TODO: change to `stable`
+  summary: CLI to pretty-print GELF log lines
+  description: CLI to pretty-print Graylog Extended Log Format (GELF) log lines.
+  grade: stable
   confinement: strict
   publish: true
-
 brew:
   github:
     owner: joaodrp
     name: homebrew-tap
-  folder: gelf-pretty
   homepage:  https://github.com/joaodrp/gelf-pretty
-  description: Binary to pretty-print Graylog Extended Log Format (GELF) messages
-  test: system "#{bin}/gelf-pretty -version"
+  description: CLI to pretty-print Graylog Extended Log Format (GELF) log lines
+  test: system "#{bin}/gelf-pretty --version"
   skip_upload: auto
-
 release:
   prerelease: auto
-  disable: true
-
+  draft: true
 checksum:
   name_template: 'checksums.txt'
-
 changelog:
   sort: asc
   filters:
