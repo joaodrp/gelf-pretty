@@ -367,10 +367,7 @@ func (h *prettyPrinter) run() error {
 			continue
 		}
 	}
-	if err := h.reader.Err(); err != nil {
-		return err
-	}
-	return nil
+	return h.reader.Err()
 }
 
 // versionInfo builds the compile/build-time version information. This is
@@ -396,10 +393,7 @@ func run(r io.Reader, w io.Writer) error {
 	color.NoColor = *noColorFlag
 
 	pp := newPrettyPrinter(r, w, nil)
-	if err := pp.run(); err != nil {
-		return err
-	}
-	return nil
+	return pp.run()
 }
 
 func main() {
