@@ -1,0 +1,82 @@
+version: 2
+
+before:
+  hooks:
+    - go mod download
+
+builds:
+  - env:
+      - CGO_ENABLED=0
+    goos:
+      - linux
+      - darwin
+      - windows
+    goarch:
+      - 386
+      - amd64
+      - arm
+      - arm64
+    goarm:
+      - "6"
+      - "7"
+
+archives:
+  - name_template: >-
+      {{ .ProjectName }}_{{ .Version }}_
+      {{- if eq .Os "darwin" }}Darwin
+      {{- else if eq .Os "linux" }}Linux
+      {{- else if eq .Os "windows" }}Windows
+      {{- else }}{{ .Os }}{{ end }}_
+      {{- if eq .Arch "amd64" }}x86_64
+      {{- else if eq .Arch "386" }}i386
+      {{- else }}{{ .Arch }}{{ end }}
+      {{- if .Arm }}v{{ .Arm }}{{ end }}
+    files:
+      - LICENSE
+      - README.md
+
+nfpms:
+  - package_name: gelf-pretty
+    file_name_template: '{{ .ProjectName }}_{{ .Version }}_{{ .Arch }}{{ if .Arm }}v{{ .Arm }}{{ end }}'
+    homepage: https://github.com/joaodrp/gelf-pretty
+    description: CLI to pretty-print Graylog Extended Log Format (GELF) log lines.
+    maintainer: João Pereira
+    license: MIT
+    formats:
+      - deb
+      - rpm
+    dependencies:
+      - git
+    recommends:
+      - rpm
+
+snapcrafts:
+  - summary: CLI to pretty-print GELF log lines
+    description: CLI to pretty-print Graylog Extended Log Format (GELF) log lines.
+    grade: stable
+    confinement: strict
+    publish: true
+
+brews:
+  - directory: Formula
+    repository:
+      owner: joaodrp
+      name: homebrew-tap
+    homepage: https://github.com/joaodrp/gelf-pretty
+    description: CLI to pretty-print Graylog Extended Log Format (GELF) log lines
+    test: system "#{bin}/gelf-pretty --version"
+    skip_upload: auto
+
+release:
+  prerelease: auto
+
+changelog:
+  sort: asc
+  filters:
+    exclude:
+      - '^docs:'
+      - '^test:'
+      - '^chore:'
+      - '^style:'
+      - Merge pull request
+      - Merge branch
