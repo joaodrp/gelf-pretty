@@ -19,6 +19,9 @@ builds:
     goarm:
       - "6"
       - "7"
+    ignore:
+      - goos: windows
+        goarch: arm
 
 archives:
   - name_template: >-
@@ -60,15 +63,20 @@ snapcrafts:
       - stable
       - edge
 
-brews:
-  - directory: Formula
+homebrew_casks:
+  - directory: Casks
     repository:
       owner: joaodrp
       name: homebrew-tap
       token: "{{ .Env.TAP_GITHUB_TOKEN }}"
     homepage: https://github.com/joaodrp/gelf-pretty
     description: CLI to pretty-print Graylog Extended Log Format (GELF) log lines
-    test: system "#{bin}/gelf-pretty --version"
+    hooks:
+      post:
+        install: |
+          if OS.mac?
+            system_command "/usr/bin/xattr", args: ["-dr", "com.apple.quarantine", "#{staged_path}/gelf-pretty"]
+          end
     skip_upload: auto
 
 release:
