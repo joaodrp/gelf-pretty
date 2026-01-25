@@ -65,6 +65,7 @@ brews:
     repository:
       owner: joaodrp
       name: homebrew-tap
+      token: "{{ .Env.TAP_GITHUB_TOKEN }}"
     homepage: https://github.com/joaodrp/gelf-pretty
     description: CLI to pretty-print Graylog Extended Log Format (GELF) log lines
     test: system "#{bin}/gelf-pretty --version"
