@@ -4,8 +4,8 @@
     <a href="https://github.com/joaodrp/gelf-pretty/releases/latest">
         <img alt="Release" src="https://img.shields.io/github/release/joaodrp/gelf-pretty.svg">
     </a>
-    <a href="https://travis-ci.com/joaodrp/gelf-pretty">
-        <img alt="Travis" src="https://img.shields.io/travis/com/joaodrp/gelf-pretty.svg">
+    <a href="https://github.com/joaodrp/gelf-pretty/actions/workflows/ci.yml">
+        <img alt="CI" src="https://github.com/joaodrp/gelf-pretty/actions/workflows/ci.yml/badge.svg">
     </a>
     <a href="https://codecov.io/gh/joaodrp/gelf-pretty">
         <img alt="Codecov"
@@ -23,9 +23,6 @@
     </a>
     <a href="LICENSE">
         <img alt="Software License" src="https://img.shields.io/badge/license-MIT-brightgreen.svg">
-    </a>
-    <a href="https://saythanks.io/to/joaodrp">
-        <img alt="SayThanks.io" src="https://img.shields.io/badge/say%20thanks-%E2%98%BC-1EAEDB.svg">
     </a>
 </p>
 
@@ -88,9 +85,9 @@ page](https://github.com/joaodrp/gelf-pretty/releases) and extract the
 ### From source
 
 ```bash
-$ go get -u github.com/joaodrp/gelf-pretty
+$ go install github.com/joaodrp/gelf-pretty@latest
 ```
-Make sure that the `$GOPATH/bin` folder is in your `$PATH`.
+Make sure that `$GOPATH/bin` is in your `$PATH`.
 
 ## Output Format
 
