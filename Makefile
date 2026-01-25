@@ -1,6 +1,3 @@
-# Enable Go modules
-export GO111MODULE := on
-
 # Versioning variables
 VERSION := $(shell git describe --abbrev=0 --tags 2>/dev/null || true)
 BUILD_COMMIT := $(shell git rev-parse HEAD)
@@ -18,13 +15,13 @@ LDFLAGS := -ldflags "-w -s \
 # Make options
 .SILENT: ;
 .DEFAULT_GOAL := help
-.PHONY: setup build lint test cover bench benchcmp profile pprof-cpu pprof-mem run ci clean help
+.PHONY: setup build lint test cover bench benchstat profile pprof-cpu pprof-mem run ci clean help
 
-setup: ## Get lint, test and build depedencies
+setup: ## Get lint, test and build dependencies
 	[ -d ./bin ] || mkdir ./bin
 	[ -d ./_tmp ] || mkdir ./_tmp
-	curl -sfL https://install.goreleaser.com/github.com/golangci/golangci-lint.sh | sh
-	cd /tmp && go get golang.org/x/tools/cmd/benchcmp
+	GOBIN=$(CURDIR)/bin go install github.com/golangci/golangci-lint/cmd/golangci-lint@latest
+	go install golang.org/x/perf/cmd/benchstat@latest
 	go mod download
 
 build: ## Compile code and build binary file
@@ -43,8 +40,8 @@ bench: ## Run benchmarks
 	if [ -f ./_tmp/bench-new.txt ]; then mv ./_tmp/bench-new.txt ./_tmp/bench-old.txt; fi;
 	go test -bench=. -benchmem -benchtime=5s ./... | tee ./_tmp/bench-new.txt
 
-benchcmp: bench ## Run benchmarks and compare with previous results
-	benchcmp ./_tmp/bench-old.txt ./_tmp/bench-new.txt
+benchstat: bench ## Run benchmarks and compare with previous results
+	benchstat ./_tmp/bench-old.txt ./_tmp/bench-new.txt
 
 profile: ## Profile CPU and memory usage
 	go test -bench=. -o=./_tmp/profile.test -cpuprofile=./_tmp/cpuprofile.out -memprofile=./_tmp/memprofile.out .

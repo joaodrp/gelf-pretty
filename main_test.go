@@ -4,15 +4,13 @@ import (
 	"bytes"
 	"flag"
 	"io"
-	"io/ioutil"
 	"os"
 	"path/filepath"
 	"testing"
 	"time"
 
-	"github.com/fatih/color"
-
 	"github.com/andreyvit/diff"
+	"github.com/fatih/color"
 )
 
 var (
@@ -45,7 +43,7 @@ func assertErrShortWrite(t *testing.T, err error) {
 
 func _loadFixture(name string) ([]byte, error) {
 	path := filepath.Join("testdata", name)
-	return ioutil.ReadFile(path)
+	return os.ReadFile(path)
 }
 
 func loadInputFixture(t testing.TB, name string) []byte {
@@ -69,7 +67,7 @@ func createGoldenFile(t *testing.T, name string) {
 
 func updateGoldenFile(t *testing.T, name string, actual []byte) {
 	path := filepath.Join("testdata", name)
-	if err := ioutil.WriteFile(path, actual, 0644); err != nil {
+	if err := os.WriteFile(path, actual, 0644); err != nil {
 		t.Fatalf("error updating golden file %s: %v", name, err)
 	}
 }
