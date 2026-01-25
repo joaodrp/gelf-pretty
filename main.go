@@ -57,6 +57,11 @@ var (
 		"app":    "_app",    // identifies the application name
 		"logger": "_logger", // identifies the application module or logger instance
 	}
+	// reservedFieldKeys enables O(1) lookup for reserved field checks.
+	reservedFieldKeys = map[string]struct{}{
+		"_app":    {},
+		"_logger": {},
+	}
 )
 
 // timeFormat is the layout used to format the GELF `timestamp` field.
@@ -123,12 +128,8 @@ func (af additionalField) String() string {
 
 // reserved finds out if the additional field is reserved or not.
 func (af additionalField) reserved() bool {
-	for _, v := range reservedFields {
-		if af.key == v {
-			return true
-		}
-	}
-	return false
+	_, ok := reservedFieldKeys[af.key]
+	return ok
 }
 
 // additionalFields represents a list of GELF `_*` additional fields.
@@ -272,7 +273,10 @@ func (g *gelf) UnmarshalJSON(data []byte) error {
 func (g *gelf) findAdditionalFieldValueByKey(key string) string {
 	for _, af := range g.additionalFields {
 		if af.key == key {
-			return af.value.(string)
+			if s, ok := af.value.(string); ok {
+				return s
+			}
+			return ""
 		}
 	}
 	return ""
