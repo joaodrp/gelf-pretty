@@ -375,11 +375,21 @@ func (h *prettyPrinter) run() error {
 func versionInfo(w io.Writer) error {
 	tw := new(tabwriter.Writer)
 	tw.Init(w, 0, 0, 0, ' ', tabwriter.AlignRight)
-	fmt.Fprintln(tw)
-	fmt.Fprintln(tw, "Version:", "\t", version)
-	fmt.Fprintln(tw, "Build Commit Hash:", "\t", commit)
-	fmt.Fprintln(tw, "Build Time:", "\t", date)
-	fmt.Fprintln(tw)
+	if _, err := fmt.Fprintln(tw); err != nil {
+		return err
+	}
+	if _, err := fmt.Fprintln(tw, "Version:", "\t", version); err != nil {
+		return err
+	}
+	if _, err := fmt.Fprintln(tw, "Build Commit Hash:", "\t", commit); err != nil {
+		return err
+	}
+	if _, err := fmt.Fprintln(tw, "Build Time:", "\t", date); err != nil {
+		return err
+	}
+	if _, err := fmt.Fprintln(tw); err != nil {
+		return err
+	}
 	return tw.Flush()
 }
 
