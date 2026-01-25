@@ -1,20 +1,20 @@
-[2019-04-19 16:13:33.838] [91;1mALERT[0m: server: [1mStarting server[0m 
-[2019-04-19 16:13:33.838] [32;1mINFO[0m: server: [1mStarting server[0m 
-[2019-04-19 16:13:33.838] [32;1mINFO[0m: app on server: [1mStarting server[0m 
-[2019-04-19 16:13:33.838] [32;1mINFO[0m: module on server: [1mStarting server[0m 
-[2019-04-19 16:13:33.903] [32;1mINFO[0m: server: [1mListening for requests[0m [35mendpoint[0m=locahost:3000/v1
-[1974-12-06 13:37:29.539] [32;1mINFO[0m: app/module on server: [1mRequest received[0m [35mmethod[0m=GET [35mpath[0m=/todos/1 [35mrequest_id[0m=0c4c165d
-[1974-12-06 13:37:29.583] [36;1mDEBUG[0m: app/module on server: [1mResponse[0m [35mrequest_id[0m=0c4c165d [35mstatus[0m=200
+[2019-04-19 16:13:33.838] [91;1mALERT[0;22m: server: [1mStarting server[22m 
+[2019-04-19 16:13:33.838] [32;1mINFO[0;22m: server: [1mStarting server[22m 
+[2019-04-19 16:13:33.838] [32;1mINFO[0;22m: app on server: [1mStarting server[22m 
+[2019-04-19 16:13:33.838] [32;1mINFO[0;22m: module on server: [1mStarting server[22m 
+[2019-04-19 16:13:33.903] [32;1mINFO[0;22m: server: [1mListening for requests[22m [35mendpoint[0m=locahost:3000/v1
+[1974-12-06 13:37:29.539] [32;1mINFO[0;22m: app/module on server: [1mRequest received[22m [35mmethod[0m=GET [35mpath[0m=/todos/1 [35mrequest_id[0m=0c4c165d
+[1974-12-06 13:37:29.583] [36;1mDEBUG[0;22m: app/module on server: [1mResponse[22m [35mrequest_id[0m=0c4c165d [35mstatus[0m=200
 	{
 		"user_id": 1,
 		"id": 1,
 		"title": "fix /users/:id/todos route",
 		"completed": false
 	}
-[1974-12-06 13:42:29.236] [32;1mINFO[0m: app/module on server: [1mRequest received[0m [35mmethod[0m=GET [35mpath[0m=/users/1/todos [35mrequest_id[0m=0c4c165d
-[1974-12-06 13:42:29.562] [31;1mERROR[0m: app/module on server: [1mUnexpected error[0m [35mrequest_id[0m=0c4c165d
+[1974-12-06 13:42:29.236] [32;1mINFO[0;22m: app/module on server: [1mRequest received[22m [35mmethod[0m=GET [35mpath[0m=/users/1/todos [35mrequest_id[0m=0c4c165d
+[1974-12-06 13:42:29.562] [31;1mERROR[0;22m: app/module on server: [1mUnexpected error[22m [35mrequest_id[0m=0c4c165d
 	runtime error: index out of range
 	goroutine 1 [running]:
 	main.main()
 		/app/module/main.go: 9 +0x20
-[1974-12-06 13:42:29.571] [33;1mWARNING[0m: app/module on server: [1mServer shutting down[0m 
+[1974-12-06 13:42:29.571] [33;1mWARNING[0;22m: app/module on server: [1mServer shutting down[22m 
