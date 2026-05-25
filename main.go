@@ -295,7 +295,7 @@ func (g *gelf) logger() string {
 // String returns the prettified representation of a GELF message.
 func (g *gelf) String() string {
 	var sb strings.Builder
-	sb.WriteString(fmt.Sprintf("%s %s: ", g.timestamp, g.level))
+	fmt.Fprintf(&sb, "%s %s: ", g.timestamp, g.level)
 
 	a := g.app()
 	if len(a) > 0 {
@@ -317,8 +317,8 @@ func (g *gelf) String() string {
 		sb.WriteString(h)
 	}
 
-	sb.WriteString(fmt.Sprintf(": %s", g.shortMessage))
-	sb.WriteString(fmt.Sprintf(" %s", g.additionalFields))
+	fmt.Fprintf(&sb, ": %s", g.shortMessage)
+	fmt.Fprintf(&sb, " %s", g.additionalFields)
 	sb.WriteString(g.fullMessage.String())
 
 	return sb.String()
