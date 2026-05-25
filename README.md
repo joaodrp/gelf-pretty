@@ -30,7 +30,7 @@
 
 ## Introduction
 
-CLI tool to read <a href="http://docs.graylog.org/en/latest/pages/gelf.html">Graylog
+CLI tool to read <a href="https://go2docs.graylog.org/current/getting_in_log_data/gelf_format.html">Graylog
 Extended Log Format (GELF)</a> log lines from `stdin`, such as:
 
 ```text
@@ -175,7 +175,7 @@ $ app | gelf-pretty --no-color
 
 `gelf-pretty` validates each input line. If a line (delimited by `\n`) is not a
 valid JSON string or is invalid according to the [GELF
-specification](http://docs.graylog.org/en/latest/pages/gelf.html#gelf-payload-specification),
+specification](https://go2docs.graylog.org/5-0/getting_in_log_data/gelf.html?Highlight=Payload#GELFPayloadSpecification),
 `gelf-pretty` will simply echo it back to the `stdout` without any modification
 (silently, with no error messages).
 
